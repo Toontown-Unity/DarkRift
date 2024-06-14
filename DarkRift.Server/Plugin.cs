@@ -5,7 +5,6 @@
  */
 
 using DarkRift.Dispatching;
-using DarkRift.Server.Plugins.Chat;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -55,11 +54,6 @@ namespace DarkRift.Server
         ///     This location may not exist if called from the constructor, use the <see cref="ExtendedPluginBase.Loaded(LoadedEventArgs)"/> event instead.
         /// </remarks>
         protected string ResourceDirectory { get; }
-
-        /// <summary>
-        ///     Helper plugin for filtering bad words out of text.
-        /// </summary>
-        public IBadWordFilter BadWordFilter => PluginManager.GetPluginByType<BadWordFilter>();
 
         /// <summary>
         ///     Creates a new plugin using the given plugin load data.

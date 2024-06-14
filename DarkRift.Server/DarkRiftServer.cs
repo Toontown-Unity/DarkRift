@@ -7,7 +7,6 @@
 using System;
 using DarkRift.Dispatching;
 using System.Threading;
-using DarkRift.Server.Plugins.Chat;
 using System.Collections.Specialized;
 using DarkRift.Server.Metrics;
 
@@ -73,11 +72,6 @@ namespace DarkRift.Server
         ///     Information about this server.
         /// </summary>
         public DarkRiftInfo ServerInfo { get; } = new DarkRiftInfo(DateTime.Now);
-
-        /// <summary>
-        ///     Helper plugin for filtering bad words out of text.
-        /// </summary>
-        public IBadWordFilter BadWordFilter => PluginManager.GetPluginByType<BadWordFilter>();
 
         /// <summary>
         ///     The server registry connector manager.
@@ -235,7 +229,6 @@ namespace DarkRift.Server
             pluginFactory.AddTypes(
                 new Type[]
                 {
-                    typeof(Plugins.Chat.BadWordFilter),
                     typeof(Plugins.Metrics.Prometheus.PrometheusEndpoint)
                 }
             );
