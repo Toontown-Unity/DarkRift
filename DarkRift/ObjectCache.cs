@@ -21,7 +21,7 @@ namespace DarkRift
     /// <remarks>
     ///     Must be initialized on the thread using DarkRiftServer.InitializeObjectCache() or will throw errors.
     /// </remarks>
-    internal static class ObjectCache
+    public static class ObjectCache
     {
         /// <summary>
         ///     Whether this cache has been initialized yet.

@@ -14,7 +14,7 @@ namespace DarkRift
     /// <summary>
     ///     Command codes for control sequences to clients/servers.
     /// </summary>
-    internal enum CommandCode : ushort
+    public enum CommandCode : ushort
     {
         /// <summary>
         ///     A identification packet presenting a new ID to a client.

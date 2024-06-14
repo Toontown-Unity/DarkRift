@@ -64,7 +64,7 @@ namespace DarkRift
         ///     Records a ping being sent to this client.
         /// </summary>
         /// <param name="pingCode">The code to identify the ping.</param>
-        internal void RecordOutboundPing(ushort pingCode)
+        public void RecordOutboundPing(ushort pingCode)
         {
             waitingPings.Add(pingCode, Stopwatch.GetTimestamp());
         }
@@ -73,7 +73,7 @@ namespace DarkRift
         ///     Records a ping being acknowledged by this client.
         /// </summary>
         /// <param name="pingCode">The code to identify the ping.</param>
-        internal void RecordInboundPing(ushort pingCode)
+        public void RecordInboundPing(ushort pingCode)
         {
             long sendTimestamp = waitingPings[pingCode];
 

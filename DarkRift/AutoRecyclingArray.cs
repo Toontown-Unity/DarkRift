@@ -18,7 +18,7 @@ namespace DarkRift
     /// </summary>
     /// <threadsafety static="true" instance="false"/>
     // TODO tie ARA in 1-1 relationship with memory so we can count finalizes and can't accidently mess up references
-    internal class AutoRecyclingArray
+    public class AutoRecyclingArray
     {
         /// <summary>
         ///     The current backing array.

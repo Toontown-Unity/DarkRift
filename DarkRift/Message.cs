@@ -54,7 +54,7 @@ namespace DarkRift
         ///     Indicates whether this message is a command message or not.
         /// </summary>
         /// <exception cref="AccessViolationException">If the message is readonly.</exception>
-        internal bool IsCommandMessage
+        public bool IsCommandMessage
         {
             get => (flags & COMMAND_FLAG_MASK) != 0;
 
@@ -152,7 +152,7 @@ namespace DarkRift
         /// <summary>
         ///     Code to identify pings and acknowledgements.
         /// </summary>
-        internal ushort PingCode { get; private set; }
+        public ushort PingCode { get; private set; }
 
         /// <summary>
         ///     Random number generator for each thread.
@@ -260,7 +260,7 @@ namespace DarkRift
         /// </summary>
         /// <param name="buffer">The buffer containing the message.</param>
         /// <param name="isReadOnly">Whether the message should be created read only or not.</param>
-        internal static Message Create(IMessageBuffer buffer, bool isReadOnly)
+        public static Message Create(IMessageBuffer buffer, bool isReadOnly)
         {
             Message message = ObjectCache.GetMessage();
 
@@ -418,7 +418,7 @@ namespace DarkRift
         /// </summary>
         /// <returns>The buffer.</returns>
         //TODO DR3 Make this return an IMessageBuffer
-        internal MessageBuffer ToBuffer()
+        public MessageBuffer ToBuffer()
         {
             int headerLength = IsPingMessage || IsPingAcknowledgementMessage ? 5 : 3;
             int totalLength = headerLength + DataLength;

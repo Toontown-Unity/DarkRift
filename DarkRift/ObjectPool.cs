@@ -16,7 +16,7 @@ namespace DarkRift
     /// <remarks>
     ///     This object is not thread safe as it is intended to be used with the ThreadStatic attribute.
     /// </remarks>
-    internal class ObjectPool<T>
+    public class ObjectPool<T>
     {
         /// <summary>
         ///     The maximum number of objects allowed in this pool per thread.
