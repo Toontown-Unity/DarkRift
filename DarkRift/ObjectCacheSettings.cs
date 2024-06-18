@@ -101,11 +101,5 @@ namespace DarkRift
         ///     The maximum number of extra large memory blocks stored per thread.
         /// </summary>
         public int MaxExtraLargeMemoryBlocks { get; set; }
-
-        /// <summary>
-        ///     Return settings so no objects are cached.
-        /// </summary>
-        [Obsolete("Use DontUseCache property on ClientObjectCacheSettings or ServerObjectCacheSettings instead.")]
-        public static readonly ObjectCacheSettings DontUseCache = new ObjectCacheSettings();
     }
 }

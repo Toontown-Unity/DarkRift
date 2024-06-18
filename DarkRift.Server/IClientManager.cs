@@ -15,22 +15,6 @@ namespace DarkRift.Server
     public interface IClientManager
     {
         /// <summary>
-        ///     The address he server is listening on.
-        /// </summary>
-        IPAddress Address { get; }
-
-        /// <summary>
-        ///     The IP version that the server is listening on.
-        /// </summary>
-        [Obsolete("Use Address.Family instead.")]
-        IPVersion IPVersion { get; }
-
-        /// <summary>
-        ///     The port the server is listening on.
-        /// </summary>
-        ushort Port { get; }
-
-        /// <summary>
         ///     Invoked when a client connects to the server.
         /// </summary>
         event EventHandler<ClientConnectedEventArgs> ClientConnected;

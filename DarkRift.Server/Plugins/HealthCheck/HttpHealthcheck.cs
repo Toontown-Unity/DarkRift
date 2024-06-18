@@ -118,10 +118,8 @@ namespace DarkRift.Server.Plugins.HealthCheck
                 {
                     context.Response.ContentType = "application/json";
 
-#pragma warning disable CS0618  // Server type is always pro now
                     using (StreamWriter writer = new StreamWriter(context.Response.OutputStream))
-                        writer.WriteLine($"{{\"listening\": true, \"startTime\": \"{ServerInfo.StartTime:yyyy-MM-ddTHH:mm:ss.fffZ}\", \"type\": \"{ServerInfo.Type}\", \"version\": \"{ServerInfo.Version}\"}}");
-#pragma warning restore CS0618
+                        writer.WriteLine($"{{\"listening\": true, \"startTime\": \"{ServerInfo.StartTime:yyyy-MM-ddTHH:mm:ss.fffZ}\", \"version\": \"{ServerInfo.Version}\"}}");
                 }
             }
         }

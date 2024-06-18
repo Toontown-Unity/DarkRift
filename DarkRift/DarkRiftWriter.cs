@@ -284,16 +284,6 @@ namespace DarkRift
         ///     Writes a single serializable object to the writer.
         /// </summary>
         /// <param name="serializable">The serializable object to write.</param>
-        [Obsolete("Use Write<T>(T serializable) instead.")]
-        public void Write(IDarkRiftSerializable serializable)
-        {
-            serializable.Serialize(serializeEventSingleton);
-        }
-
-        /// <summary>
-        ///     Writes a single serializable object to the writer.
-        /// </summary>
-        /// <param name="serializable">The serializable object to write.</param>
         public void Write<T>(T serializable) where T : IDarkRiftSerializable
         {
             serializable.Serialize(serializeEventSingleton);

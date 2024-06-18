@@ -24,30 +24,6 @@ namespace DarkRift.Server
     internal sealed class ClientManager : IDisposable, IClientManager
     {
         /// <summary>
-        ///     The address the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the address of a BichannelListener called 'DefaultNetworkListener'.")]
-        public IPAddress Address => GetDefaultBichannelListenerOrError().Address;
-
-        /// <summary>
-        ///     The port the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the port of a BichannelListener called 'DefaultNetworkListener'.")]
-        public ushort Port => GetDefaultBichannelListenerOrError().Port;
-            
-        /// <summary>
-        ///     The IP version that the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the IP version of a BichannelListener called 'DefaultNetworkListener'.")]
-        public IPVersion IPVersion => GetDefaultBichannelListenerOrError().Address.AddressFamily == AddressFamily.InterNetworkV6 ? IPVersion.IPv6 : IPVersion.IPv4;
-
-        /// <summary>
-        ///     Whether Nagle's algorithm is disabled.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the no delay property of a BichannelListener called 'DefaultNetworkListener'.")]
-        public bool NoDelay => GetDefaultBichannelListenerOrError().NoDelay;
-
-        /// <summary>
         ///     Returns whether the server has been started and not yet stopped.
         /// </summary>
         public bool Listening { get; private set; }
@@ -78,16 +54,6 @@ namespace DarkRift.Server
         ///     The number of strikes a client can get before they are kicked.
         /// </summary>
         public byte MaxStrikes { get; }
-
-        /// <summary>
-        ///     Whether the fallback networking is being used for compatability.
-        /// </summary>
-        /// <remarks>
-        ///     Unity has issues with DarkRift's default (better) socket interfaces so this indicates
-        ///     the fallback networking is in use for compatability at a performance cost.
-        /// </remarks>
-        [Obsolete("Use listener system instead. This will currently read if a BichannelListener or CompatibilityBichannelListener is called 'DefaultNetworkListener'.")]
-        public bool UseFallbackNetworking => GetDefaultBichannelListenerOrError() is CompatibilityBichannelListener;
 
         /// <summary>
         ///     The clients connected to this server.

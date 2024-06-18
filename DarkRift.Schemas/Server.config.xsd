@@ -25,19 +25,6 @@
       <xs:attribute name="maxActionDispatcherTasks" type="xs:unsignedInt" use="optional" />
     </xs:complexType>
   </xs:element>
-  <xs:element name="databases">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="database" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="database">
-    <xs:complexType>
-      <xs:attribute name="name" type="xs:string" use="optional" />
-      <xs:attribute name="connectionString" type="xs:string" use="optional" />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="plugins">
     <xs:complexType>
       <xs:sequence>
@@ -86,12 +73,7 @@
   </xs:element>
   <xs:element name="server">
     <xs:complexType>
-      <xs:attribute name="address" type="serverAddress" use="optional" />
-      <xs:attribute name="port" type="xs:unsignedInt" use="optional" />
-      <xs:attribute name="ipVersion" type="ipVersion" use="optional" />
       <xs:attribute name="maxStrikes" type="xs:unsignedInt" use="required" />
-      <xs:attribute name="noDelay" type="xs:boolean" use="optional" />
-      <xs:attribute name="useFallback" type="xs:boolean" use="optional" />
       <xs:attribute name="serverGroup" type="xs:string" use="optional" />
       <xs:attribute name="reconnectAttempts" type="xs:unsignedInt" use="optional" />
     </xs:complexType>

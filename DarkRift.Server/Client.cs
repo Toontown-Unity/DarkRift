@@ -36,10 +36,6 @@ namespace DarkRift.Server
         public IPEndPoint RemoteUdpEndPoint => connection.GetRemoteEndPoint("udp");
 
         /// <inheritdoc/>
-        [Obsolete("Use Client.ConnectionState instead.")]
-        public bool IsConnected => connection.ConnectionState == ConnectionState.Connected;
-
-        /// <inheritdoc/>
         public ConnectionState ConnectionState => connection.ConnectionState;
 
         /// <inheritdoc/>
