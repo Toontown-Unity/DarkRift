@@ -33,12 +33,12 @@ namespace DarkRift.Server
         ///     The dispatcher for this server.
         /// </summary>
         public IDispatcher Dispatcher { get; }
-        
+
         /// <summary>
         ///     Information about this server.
         /// </summary>
         public DarkRiftInfo ServerInfo { get; }
-        
+
         /// <summary>
         ///     The thread helper for the server.
         /// </summary>
@@ -111,7 +111,7 @@ namespace DarkRift.Server
             {
                 if (disposing)
                 {
-                    
+
                 }
 
                 disposedValue = true;

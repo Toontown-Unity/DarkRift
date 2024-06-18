@@ -5,9 +5,6 @@
  */
 
 using DarkRift.Server.Metrics;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading;
 
 namespace DarkRift.Server.Plugins.Metrics.Prometheus
@@ -42,7 +39,7 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
         /// The preformatted metric text for sum.
         /// </summary>
         internal string PreformattedSum { get; }
-        
+
         /// <summary>
         /// The preformatted metric text for count.
         /// </summary>

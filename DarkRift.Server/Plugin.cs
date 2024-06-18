@@ -4,14 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift.Server
 {
     /// <summary>
@@ -60,7 +52,7 @@ namespace DarkRift.Server
         /// </summary>
         /// <param name="pluginLoadData">The plugin load data for this plugin.</param>
         public Plugin(PluginLoadData pluginLoadData)
-            : base (pluginLoadData)
+            : base(pluginLoadData)
         {
             ClientManager = pluginLoadData.ClientManager;
             PluginManager = pluginLoadData.PluginManager;

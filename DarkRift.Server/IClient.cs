@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -68,7 +66,7 @@ namespace DarkRift.Server
         ///     The collection of end points this client is connected to.
         /// </summary>
         IEnumerable<IPEndPoint> RemoteEndPoints { get; }
-        
+
         /// <summary>
         ///     The round trip time helper for this client.
         /// </summary>

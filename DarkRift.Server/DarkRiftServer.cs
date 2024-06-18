@@ -4,12 +4,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using DarkRift.Dispatching;
-using System.Threading;
+using DarkRift.Server.Metrics;
+using System;
 using System.Collections.Specialized;
 using System.Net;
-using DarkRift.Server.Metrics;
+using System.Threading;
 
 namespace DarkRift.Server
 {
@@ -158,7 +158,7 @@ namespace DarkRift.Server
         /// </summary>
         /// <param name="spawnData">The details of how to start the server.</param>
         public DarkRiftServer(ServerSpawnData spawnData)
-            : this (spawnData, ClusterSpawnData.CreateDefault())
+            : this(spawnData, ClusterSpawnData.CreateDefault())
         {
 
         }
@@ -308,7 +308,7 @@ namespace DarkRift.Server
                 networkListenerManager.LoadNetworkListener(
                     typeof(Plugins.Listeners.Bichannel.BichannelListener),
                     "DefaultNetworkListener",
-                    IPAddress.Any, 
+                    IPAddress.Any,
                     4296,
                     listenerSettings
                 );

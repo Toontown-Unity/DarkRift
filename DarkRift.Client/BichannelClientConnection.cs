@@ -6,11 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 
 namespace DarkRift.Client
 {
@@ -34,7 +31,8 @@ namespace DarkRift.Client
         /// <summary>
         ///     Whether Nagel's algorithm should be disabled or not.
         /// </summary>
-        public bool NoDelay {
+        public bool NoDelay
+        {
             get => tcpSocket.NoDelay;
             set => tcpSocket.NoDelay = value;
         }
@@ -72,7 +70,7 @@ namespace DarkRift.Client
         /// <param name="port">The port (UDP and TCP) the server is listening on.</param>
         /// <param name="noDelay">Whether to disable Nagle's algorithm or not.</param>
         public BichannelClientConnection(IPAddress ipAddress, int port, bool noDelay)
-            : this (ipAddress, port, port, noDelay)
+            : this(ipAddress, port, port, noDelay)
         {
         }
 
@@ -84,7 +82,7 @@ namespace DarkRift.Client
         /// <param name="tcpPort">The port the server is listening on for TCP.</param>
         /// <param name="noDelay">Whether to disable Nagle's algorithm or not.</param>
         public BichannelClientConnection(IPAddress ipAddress, int tcpPort, int udpPort, bool noDelay)
-            : base ()
+            : base()
         {
             RemoteTcpEndPoint = new IPEndPoint(ipAddress, tcpPort);
             RemoteUdpEndPoint = new IPEndPoint(ipAddress, udpPort);
@@ -654,7 +652,8 @@ namespace DarkRift.Client
         ///     Updates the pointers on the buffer to continue a receive operation.
         /// </summary>
         /// <param name="args">The socket args to update.</param>
-        private void UpdateBufferPointers(SocketAsyncEventArgs args) {
+        private void UpdateBufferPointers(SocketAsyncEventArgs args)
+        {
             args.SetBuffer(args.Offset + args.BytesTransferred, args.Count - args.BytesTransferred);
         }
 

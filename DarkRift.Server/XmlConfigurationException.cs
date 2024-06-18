@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace DarkRift.Server
@@ -34,7 +31,8 @@ namespace DarkRift.Server
         /// <param name="msg">The message for the exception.</param>
         /// <param name="documentationLink">The location of documentation for this issue.</param>
         /// <param name="lineInfo">The line information about where this issue is.</param>
-        public XmlConfigurationException(string msg, string documentationLink, IXmlLineInfo lineInfo) : base(msg) {
+        public XmlConfigurationException(string msg, string documentationLink, IXmlLineInfo lineInfo) : base(msg)
+        {
             DocumentationLink = documentationLink;
             LineInfo = lineInfo;
         }
@@ -46,7 +44,8 @@ namespace DarkRift.Server
         /// <param name="documentationLink">The location of documentation for this issue.</param>
         /// <param name="lineInfo">The line information about where this issue is.</param>
         /// <param name="innerException">The inner exception.</param>
-        public XmlConfigurationException(string msg, string documentationLink, IXmlLineInfo lineInfo, Exception innerException) : base(msg, innerException) {
+        public XmlConfigurationException(string msg, string documentationLink, IXmlLineInfo lineInfo, Exception innerException) : base(msg, innerException)
+        {
             DocumentationLink = documentationLink;
             LineInfo = lineInfo;
         }

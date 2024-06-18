@@ -67,7 +67,8 @@ namespace DarkRift.Client
         ///     The recommended cache settings for clients.
         /// </summary>
         //TODO DR3 rename back to DefaultCacheSettings
-        public static ClientObjectCacheSettings DefaultClientCacheSettings => new ClientObjectCacheSettings {
+        public static ClientObjectCacheSettings DefaultClientCacheSettings => new ClientObjectCacheSettings
+        {
             MaxWriters = 2,
             MaxReaders = 2,
             MaxMessages = 4,
@@ -88,13 +89,13 @@ namespace DarkRift.Client
             MaxExtraLargeMemoryBlocks = 2,
 
             MaxMessageReceivedEventArgs = 4
-    };
+        };
 
         /// <summary>
         ///     Creates a new DarkRiftClient object with default cache settings.
         /// </summary>
         public DarkRiftClient()
-            : this (DefaultClientCacheSettings)
+            : this(DefaultClientCacheSettings)
         {
 
         }
@@ -318,7 +319,7 @@ namespace DarkRift.Client
         }
 
         private volatile bool disposed = false;
-        
+
         /// <summary>
         ///     Disposes of the DarkRift client object.
         /// </summary>

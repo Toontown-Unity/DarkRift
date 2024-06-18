@@ -18,7 +18,7 @@ namespace DarkRift
         public int Count { get; set; }
 
         /// <inheritdoc/>
-        public int Offset { get; set;  }
+        public int Offset { get; set; }
 
         /// <summary>
         ///     Creates an <see cref="IMessageBuffer"/> for arrays not managed by DarkRift.
@@ -43,7 +43,7 @@ namespace DarkRift
         #region IDisposable Support
 
         // Nothing to dispose of here!
-        
+
         public void Dispose()
         {
 

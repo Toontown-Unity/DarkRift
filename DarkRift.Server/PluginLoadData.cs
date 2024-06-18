@@ -4,13 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
 using DarkRift.Server.Metrics;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -23,7 +19,7 @@ namespace DarkRift.Server
         ///     The client manager to pass to the server.
         /// </summary>
         public IClientManager ClientManager { get; set; }
-        
+
         /// <summary>
         ///     The plugin manager to pass to the plugin.
         /// </summary>
@@ -49,7 +45,7 @@ namespace DarkRift.Server
         /// </summary>
         public string ResourceDirectory { get; set; }
 
-        internal PluginLoadData (string name, DarkRiftServer server, NameValueCollection settings, Logger logger, MetricsCollector metricsCollector, string resourceDirectory)
+        internal PluginLoadData(string name, DarkRiftServer server, NameValueCollection settings, Logger logger, MetricsCollector metricsCollector, string resourceDirectory)
             : base(name, server, settings, logger, metricsCollector)
         {
             this.ClientManager = server.ClientManager;

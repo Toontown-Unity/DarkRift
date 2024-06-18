@@ -298,7 +298,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
             if (!b)
                 ranking += weight;
         }
-        
+
         /// <summary>
         ///     Instructs that this pair should not be ranked together.
         /// </summary>

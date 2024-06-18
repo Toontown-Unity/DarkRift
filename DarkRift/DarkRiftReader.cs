@@ -5,10 +5,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace DarkRift
 {
@@ -541,7 +539,7 @@ namespace DarkRift
                 throw new EndOfStreamException($"Failed to read data from reader as the reader does not have enough data remaining. Expected {length} bytes but reader only has {Length - Position - 4} bytes remaining.");
 
             char[] array = encoding.GetChars(buffer.Buffer, buffer.Offset + Position + 4, length);
-            
+
             Position += 4 + length;
 
             return array;
@@ -726,7 +724,7 @@ namespace DarkRift
             for (int i = 0, j = buffer.Offset + Position + 4; i < length; i++, j += 2)
                 array[i] = BigEndianHelper.ReadInt16(buffer.Buffer, j);
 
-            Position += 4 + length *2;
+            Position += 4 + length * 2;
 
             return array;
         }
@@ -860,7 +858,7 @@ namespace DarkRift
 
             if (Position + 4 + length * 8 > Length)
                 throw new EndOfStreamException($"Failed to read data from reader as the reader does not have enough data remaining. Expected {length * 8} bytes but reader only has {Length - Position - 4} bytes remaining.");
-            
+
             for (int i = 0, j = buffer.Offset + Position + 4; i < length; i++, j += 8)
                 destination[i + offset] = BigEndianHelper.ReadInt64(buffer.Buffer, j);
 
@@ -1015,7 +1013,7 @@ namespace DarkRift
             for (int i = 0; i < length; i++)
                 destination[i + offset] = ReadString();
         }
-        
+
         /// <summary>
         ///     Reads an array unsigned 16bit integers from the reader.
         /// </summary>
@@ -1038,7 +1036,7 @@ namespace DarkRift
 
             return array;
         }
-        
+
         /// <summary>
         ///     Reads an array unsigned 16bit integers from the reader.
         /// </summary>
@@ -1192,7 +1190,7 @@ namespace DarkRift
             T[] array = new T[length];
             for (int i = 0; i < length; i++)
                 array[i] = ReadSerializable<T>();
-            
+
             return array;
         }
 
@@ -1219,7 +1217,7 @@ namespace DarkRift
             int length = BigEndianHelper.ReadInt32(buffer.Buffer, buffer.Offset + Position);
 
             Position += 4;
-            
+
             for (int i = 0; i < length; i++)
                 destination[i + offset] = ReadSerializable<T>();
         }

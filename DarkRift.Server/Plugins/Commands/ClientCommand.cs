@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -35,7 +34,7 @@ namespace DarkRift.Server.Plugins.Commands
         {
 
         }
-        
+
         private void ClientCommandHandler(object sender, CommandEventArgs e)
         {
             if (e.Arguments.Length < 1)

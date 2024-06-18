@@ -6,15 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Text;
-using System.Xml;
-using System.Configuration;
-using System.IO;
-
-using System.Net;
 using System.Collections.Specialized;
+using System.Net;
+using System.Xml.Linq;
 
 namespace DarkRift.Server
 {
@@ -44,7 +38,7 @@ namespace DarkRift.Server
         ///     The settings for the log writer plugins and general logging.
         /// </summary>
         public LoggingSettings Logging { get; set; } = new LoggingSettings();
-        
+
         /// <summary>
         ///     The settings for resolving and loading plugins.
         /// </summary>
@@ -214,8 +208,8 @@ namespace DarkRift.Server
 
                 //Read search paths
                 helper.ReadElementCollectionTo(
-                    element, 
-                    "pluginSearchPath", 
+                    element,
+                    "pluginSearchPath",
                     e =>
                     {
                         PluginSearchPath psp = new PluginSearchPath();
@@ -237,7 +231,7 @@ namespace DarkRift.Server
             ///     The directory to store data in.
             /// </summary>
             public string Directory { get; set; } = "Data/";
-            
+
             /// <summary>
             ///     Loads the server settings from the specified XML element.
             /// </summary>
@@ -367,7 +361,8 @@ namespace DarkRift.Server
                 helper.ReadElementCollectionTo(
                     logWritersElement,
                     "logWriter",
-                    e => {
+                    e =>
+                    {
                         LogWriterSettings s = new LogWriterSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;
@@ -377,7 +372,7 @@ namespace DarkRift.Server
             }
         }
 
-        
+
 
         /// <summary>
         ///     Handles the settings for plugins.
@@ -431,7 +426,7 @@ namespace DarkRift.Server
                         element,
                         "type"
                     );
-                    
+
                     //Load attribute.
                     Load = helper.ReadBooleanAttribute(
                         element,
@@ -445,7 +440,7 @@ namespace DarkRift.Server
                     );
                 }
             }
-            
+
             /// <summary>
             ///     Loads the plugins settings from the specified XML element.
             /// </summary>
@@ -581,7 +576,7 @@ namespace DarkRift.Server
                     ServerObjectCacheSettings.MaxSocketAsyncEventArgs = helper.ReadUInt16AttributeOrDefault(element, "maxCachedSocketAsyncEventArgs", 32);
                     ServerObjectCacheSettings.MaxActionDispatcherTasks = helper.ReadUInt16AttributeOrDefault(element, "maxActionDispatcherTasks", 16);
                     ServerObjectCacheSettings.MaxAutoRecyclingArrays = helper.ReadUInt16AttributeOrDefault(element, "maxAutoRecyclingArrays", 4);
-                    ServerObjectCacheSettings.MaxMessageReceivedEventArgs= helper.ReadUInt16AttributeOrDefault(element, "maxMessageReceivedEventArgs", 4);
+                    ServerObjectCacheSettings.MaxMessageReceivedEventArgs = helper.ReadUInt16AttributeOrDefault(element, "maxMessageReceivedEventArgs", 4);
 
                     ServerObjectCacheSettings.ExtraSmallMemoryBlockSize = helper.ReadUInt16AttributeOrDefault(element, "extraSmallMemoryBlockSize", 16);
                     ServerObjectCacheSettings.MaxExtraSmallMemoryBlocks = helper.ReadUInt16AttributeOrDefault(element, "maxExtraSmallMemoryBlocks", 4);
@@ -679,7 +674,7 @@ namespace DarkRift.Server
                         "port",
                         0
                     );
-                    
+
                     helper.ReadAttributeCollectionTo(
                         element.Element("settings"),
                         Settings
@@ -708,7 +703,8 @@ namespace DarkRift.Server
                 helper.ReadElementCollectionTo(
                     element,
                     "listener",
-                    e => {
+                    e =>
+                    {
                         NetworkListenerSettings s = new NetworkListenerSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;
@@ -966,6 +962,6 @@ namespace DarkRift.Server
         {
 
         }
-        
+
     }
 }

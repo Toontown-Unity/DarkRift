@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -35,7 +34,7 @@ namespace DarkRift.Server.Plugins.Commands
         {
             if (e.Arguments.Length < 3)
                 throw new CommandSyntaxException($"Expected 3 arguments but found {e.Arguments.Length}.");
-            
+
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 ushort clientID;

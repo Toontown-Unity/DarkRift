@@ -5,11 +5,7 @@
  */
 
 using DarkRift.Dispatching;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -46,7 +42,7 @@ namespace DarkRift.Server
         /// <summary>
         ///     The server's log manager.
         /// </summary>
-        public ILogManager LogManager { get; set;  }
+        public ILogManager LogManager { get; set; }
 
         /// <summary>
         ///     The logger this plugin will use.

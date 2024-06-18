@@ -270,7 +270,7 @@ namespace DarkRift.Server
             //Log creation
             if (!plugin.Hidden)
                 logger.Trace($"Created plugin '{type.Name}'.");
-            
+
             return plugin;
         }
 

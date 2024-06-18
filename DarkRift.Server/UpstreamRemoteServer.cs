@@ -155,7 +155,7 @@ namespace DarkRift.Server
             // TODO this will always try the same IP address, break out round robin option for load balancing
             this.connection = GetResultOfFirstSuccessfulInvocationOf(addresses, (address) =>
             {
-               NetworkClientConnection c = serverGroup.GetConnection(address, Port);
+                NetworkClientConnection c = serverGroup.GetConnection(address, Port);
 
                 c.MessageReceived += MessageReceivedHandler;
                 c.Disconnected += DisconnectedHandler;

@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data.Common;
-using System.Linq;
 using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
@@ -28,7 +25,7 @@ namespace DarkRift.Server.Plugins.Commands
         public override bool ThreadSafe => true;
 
         internal override bool Hidden => true;
-        
+
         public PluginController(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
         }
@@ -86,7 +83,7 @@ namespace DarkRift.Server.Plugins.Commands
             sb.AppendLine(" plugins loaded.");
             for (int i = 0; i < loaded.Length; i++)
             {
-                sb.Append((i+1).ToString().PadRight(4));
+                sb.Append((i + 1).ToString().PadRight(4));
                 sb.Append(loaded[i].Name.PadRight(24));
                 sb.AppendLine(loaded[i].Hidden ? "(Hidden)" : "");
             }
@@ -100,7 +97,7 @@ namespace DarkRift.Server.Plugins.Commands
                 throw new CommandSyntaxException();
 
             StringBuilder sb = new StringBuilder();
-                        
+
             int i = 0;
             foreach (PluginRecord plugin in Server.DataManager.ReadAllPluginRecords())
             {

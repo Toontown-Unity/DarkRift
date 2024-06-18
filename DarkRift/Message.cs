@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift
 {
@@ -241,7 +238,7 @@ namespace DarkRift
 
             // We clone the message buffer so we can modify it's properties safely
             message.buffer = buffer.Clone();
-            
+
             //Get flags first so we can query it
             message.flags = buffer.Buffer[buffer.Offset];
 
@@ -262,7 +259,7 @@ namespace DarkRift
         /// </summary>
         internal Message()
         {
-            
+
         }
 
         /// <summary>
@@ -402,7 +399,7 @@ namespace DarkRift
 
             //We don't want to give a reference to our buffer so we need to clone it
             message.buffer = buffer.Clone();
-            
+
             message.flags = flags;
             message.tag = tag;
             message.PingCode = PingCode;

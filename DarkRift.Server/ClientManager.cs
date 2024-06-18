@@ -4,17 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using DarkRift.Dispatching;
+using DarkRift.Server.Metrics;
+using DarkRift.Server.Plugins.Listeners.Bichannel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using DarkRift.Server.Plugins.Listeners.Bichannel;
-using DarkRift.Dispatching;
 using System.Diagnostics;
-using DarkRift.Server.Metrics;
-using System.Xml.Schema;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace DarkRift.Server
 {
@@ -37,7 +34,7 @@ namespace DarkRift.Server
         ///     Invoked when a client disconnects from the server.
         /// </summary>
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        
+
         /// <summary>
         ///     Returns the number of clients currently connected.
         /// </summary>

@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -37,7 +34,8 @@ namespace DarkRift.Server
         /// <summary>
         ///     The number of strikes this accounts for.
         /// </summary>
-        public int Weight {
+        public int Weight
+        {
             get => weight;
             set
             {

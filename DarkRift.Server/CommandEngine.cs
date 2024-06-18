@@ -192,7 +192,7 @@ namespace DarkRift.Server
         {
             return pluginManager.ActuallyGetAllPlugins().SelectMany(p => p.Commands);
         }
-        
+
         /// <summary>
         ///     Returns all command available in the given plugin.
         /// </summary>
@@ -201,7 +201,7 @@ namespace DarkRift.Server
         {
             return pluginManager.GetPluginByName(pluginName).Commands;
         }
-        
+
         /// <summary>
         ///     Gets the plugin a command was intended for or null if none was specified.
         /// </summary>

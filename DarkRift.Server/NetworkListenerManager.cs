@@ -6,11 +6,9 @@
 
 using DarkRift.Server.Metrics;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -83,7 +81,7 @@ namespace DarkRift.Server
         {
             NetworkListenerLoadData loadData = new NetworkListenerLoadData(
                 type.Name,
-                address, 
+                address,
                 port,
                 server,
                 settings,

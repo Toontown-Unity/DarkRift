@@ -23,7 +23,7 @@ namespace DarkRift
         ///     This state might not be used by a connection and may be skipped over.
         /// </remarks>
         Connecting,
-        
+
         /// <summary>
         ///     The server and client are connected and can send and receive data.
         /// </summary>

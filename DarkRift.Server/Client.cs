@@ -4,16 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using DarkRift.Dispatching;
+using DarkRift.Server.Metrics;
 using System;
 using System.Collections.Generic;
-using System.Net;
-
-using System.Threading;
-using System.Net.Sockets;
-using DarkRift.Dispatching;
 using System.Diagnostics;
-using DarkRift.DataStructures;
-using DarkRift.Server.Metrics;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace DarkRift.Server
 {
@@ -39,7 +37,8 @@ namespace DarkRift.Server
         public ConnectionState ConnectionState => connection.ConnectionState;
 
         /// <inheritdoc/>
-        public byte Strikes {
+        public byte Strikes
+        {
             get => (byte)Thread.VolatileRead(ref strikes);
             set => Interlocked.Exchange(ref strikes, value);
         }
@@ -363,8 +362,8 @@ namespace DarkRift.Server
 
             return true;
         }
-        
-#region Strikes
+
+        #region Strikes
 
         /// <inheritdoc/>
         public void Strike(string message = null)
@@ -441,7 +440,7 @@ namespace DarkRift.Server
                 logger.Info($"Client was disconnected as the total weight of accumulated strikes exceeded the allowed number ({newValue}/{clientManager.MaxStrikes}).");
             }
         }
-#endregion
+        #endregion
 
         /// <summary>
         ///     Disposes of this client.

@@ -5,11 +5,7 @@
  */
 
 using DarkRift.DataStructures;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift
 {
@@ -27,7 +23,7 @@ namespace DarkRift
         ///     Returns the latest recorded round trip time to the remote and back in seconds.
         /// </summary>
         public float LatestRtt { get; private set; }
-        
+
         /// <summary>
         ///     The number of samples used to calculate the smoothed round trip time.
         /// </summary>
@@ -74,7 +70,7 @@ namespace DarkRift
             long receiveTimestamp = Stopwatch.GetTimestamp();
 
             float rtt = (float)(receiveTimestamp - sendTimestamp) / Stopwatch.Frequency;
-            
+
             movingAverage.Add(rtt);
             LatestRtt = rtt;
         }

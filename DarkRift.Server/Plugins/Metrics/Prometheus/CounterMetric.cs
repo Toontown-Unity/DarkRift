@@ -5,7 +5,6 @@
  */
 
 using DarkRift.Server.Metrics;
-using System.Threading;
 
 namespace DarkRift.Server.Plugins.Metrics.Prometheus
 {

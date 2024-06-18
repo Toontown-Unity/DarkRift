@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -50,7 +47,7 @@ namespace DarkRift.Server
             this.dataManager = dataManager;
             this.pluginFactory = pluginFactory;
         }
-        
+
         /// <summary>
         ///     Load the plugin given.
         /// </summary>
@@ -64,7 +61,7 @@ namespace DarkRift.Server
             //Ensure the resource directory is present
             if (createResourceDirectory)
                 dataManager.CreateResourceDirectory(type.Name);
-            
+
             T plugin = pluginFactory.Create<T>(type, pluginLoadData);
 
             plugins.Add(name, plugin);
@@ -100,7 +97,7 @@ namespace DarkRift.Server
         {
             if (!server.Loaded)
                 throw new InvalidOperationException($"You cannot search for plugins during initialization, use the Loaded event instead: {server.ServerInfo.DocumentationRoot}advanced/installs_and_upgrades.html#loaded");
-            
+
             return plugins.Values;
         }
 

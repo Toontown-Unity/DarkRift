@@ -17,7 +17,7 @@ namespace DarkRift
         ///     The array containing the data.
         /// </summary>
         byte[] Buffer { get; }
-        
+
         /// <summary>
         ///     The number of bytes of data in the array.
         /// </summary>

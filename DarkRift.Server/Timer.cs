@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
 using System;
 using System.Threading;
 
@@ -33,7 +32,7 @@ namespace DarkRift.Server
         /// <summary>
         ///     The repetition period set on the timer.
         /// </summary>
-        public int RepetitionPeriod{ get; }
+        public int RepetitionPeriod { get; }
 
         /// <summary>
         ///     The backing timer.
@@ -93,7 +92,7 @@ namespace DarkRift.Server
             threadHelper.DispatchIfNeeded(DoInvoke);
         }
 
-    #region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         private void Dispose(bool disposing)
@@ -108,7 +107,7 @@ namespace DarkRift.Server
                 disposedValue = true;
             }
         }
-        
+
         /// <summary>
         ///     Disposes of the timer and cancels all future invocations.
         /// </summary>
@@ -116,6 +115,6 @@ namespace DarkRift.Server
         {
             Dispose(true);
         }
-    #endregion
+        #endregion
     }
 }

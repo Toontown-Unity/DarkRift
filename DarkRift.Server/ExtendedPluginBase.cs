@@ -5,10 +5,6 @@
  */
 
 using DarkRift.Server.Metrics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -54,7 +50,7 @@ namespace DarkRift.Server
             : base(pluginLoadData)
         {
             MetricsManager = pluginLoadData.MetricsManager;
-            MetricsCollector= pluginLoadData.MetricsCollector;
+            MetricsCollector = pluginLoadData.MetricsCollector;
         }
 
         /// <summary>

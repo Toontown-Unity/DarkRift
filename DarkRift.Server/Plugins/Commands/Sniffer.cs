@@ -36,7 +36,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public Sniffer(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
-            
+
         }
 
         private void ClientManager_ClientConnected(object sender, ClientConnectedEventArgs e)
@@ -192,7 +192,7 @@ namespace DarkRift.Server.Plugins.Commands
         {
             //Should we output data?
             bool outputData = flags.AllKeys.Contains("h");
-            
+
             RuleGroup group = new RuleGroup(outputData);
 
             //Load all rules

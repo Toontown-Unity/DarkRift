@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -75,7 +74,8 @@ namespace DarkRift.Server.Plugins.Commands
                     throw new CommandSyntaxException($"Unable to parse the tag. Expected a number but got '{e.Arguments[2]}'.");
                 }
 
-                try {
+                try
+                {
                     IEnumerable<byte> bytes =
                         e.Arguments
                             .Skip(3)
