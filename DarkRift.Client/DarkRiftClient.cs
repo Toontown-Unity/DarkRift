@@ -38,21 +38,9 @@ namespace DarkRift.Client
         public ConnectionState ConnectionState => Connection?.ConnectionState ?? ConnectionState.Disconnected;
 
         /// <summary>
-        ///     Returns whether or not this client is connected to the server.
-        /// </summary>
-        [Obsolete("Use DarkRiftClient.ConnectionState instead.")]
-        public bool Connected => Connection == null ? false : Connection.ConnectionState == ConnectionState.Connected;
-
-        /// <summary>
         ///     The endpoints of the connection.
         /// </summary>
         public IEnumerable<IPEndPoint> RemoteEndPoints => Connection?.RemoteEndPoints ?? new IPEndPoint[0];
-
-        /// <summary>
-        ///     The remote end point of the connection.
-        /// </summary>
-        [Obsolete("Use DarkRiftClient.GetRemoteEndPoint(\"TCP\") instead.")]
-        public IPEndPoint RemoteEndPoint => Connection?.GetRemoteEndPoint("TCP");
 
         /// <summary>
         ///     Delegate type for handling the completion of an asynchronous connect.
@@ -78,14 +66,9 @@ namespace DarkRift.Client
         /// <summary>
         ///     The recommended cache settings for clients.
         /// </summary>
-        [Obsolete("Use DefaultClientCacheSettings instead.")]
-        public static ObjectCacheSettings DefaultCacheSettings => DefaultClientCacheSettings;
-
-        /// <summary>
-        ///     The recommended cache settings for clients.
-        /// </summary>
         //TODO DR3 rename back to DefaultCacheSettings
-        public static ClientObjectCacheSettings DefaultClientCacheSettings => new ClientObjectCacheSettings {
+        public static ClientObjectCacheSettings DefaultClientCacheSettings => new ClientObjectCacheSettings
+        {
             MaxWriters = 2,
             MaxReaders = 2,
             MaxMessages = 4,
@@ -106,13 +89,13 @@ namespace DarkRift.Client
             MaxExtraLargeMemoryBlocks = 2,
 
             MaxMessageReceivedEventArgs = 4
-    };
+        };
 
         /// <summary>
         ///     Creates a new DarkRiftClient object with default cache settings.
         /// </summary>
         public DarkRiftClient()
-            : this (DefaultClientCacheSettings)
+            : this(DefaultClientCacheSettings)
         {
 
         }
@@ -127,78 +110,6 @@ namespace DarkRift.Client
             ClientObjectCache.Initialize(objectCacheSettings);
 
             this.RoundTripTime = new RoundTripTimeHelper(10, 10);
-        }
-
-        /// <summary>
-        ///     Creates a new DarkRiftClient object with specified cache settings.
-        /// </summary>
-        /// <param name="maxCachedWriters">The maximum number of DarkRiftWriters to cache per thread.</param>
-        /// <param name="maxCachedReaders">The maximum number of DarkRiftReaders to cache per thread.</param>
-        /// <param name="maxCachedMessages">The maximum number of Messages to cache per thread.</param>
-        /// <param name="maxCachedSocketAsyncEventArgs">The maximum number of SocketAsyncEventArgs to cache per thread.</param>
-        /// <param name="maxActionDispatcherTasks">The maximum number of ActionDispatcherTasks to cache per thread.</param>
-        [Obsolete("Use DarkRiftClient(ClientObjectCacheSettings) instead.")]
-        public DarkRiftClient(int maxCachedWriters = 2, int maxCachedReaders = 2, int maxCachedMessages = 4, int maxCachedSocketAsyncEventArgs = 32, int maxActionDispatcherTasks = 16)
-        {
-            ObjectCacheSettings objectCacheSettings = DefaultCacheSettings;
-            objectCacheSettings.MaxWriters = maxCachedWriters;
-            objectCacheSettings.MaxReaders = maxCachedReaders;
-            objectCacheSettings.MaxMessages = maxCachedMessages;
-            objectCacheSettings.MaxSocketAsyncEventArgs = maxCachedSocketAsyncEventArgs;
-            objectCacheSettings.MaxActionDispatcherTasks = maxActionDispatcherTasks;
-
-            ObjectCache.Initialize(objectCacheSettings);
-
-            this.RoundTripTime = new RoundTripTimeHelper(10, 10);
-        }
-
-        /// <summary>
-        ///     Creates a new DarkRiftClient object with specified cache settings.
-        /// </summary>
-        /// <param name="objectCacheSettings">The settings for the object cache.</param>
-        [Obsolete("Use DarkRiftClient(ClientObjectCacheSettings) instead.")]
-        public DarkRiftClient(ObjectCacheSettings objectCacheSettings)
-        {
-            ObjectCache.Initialize(objectCacheSettings);
-
-            if (objectCacheSettings is ClientObjectCacheSettings settings)
-            {
-                ClientObjectCache.Initialize(settings);
-            }
-            else
-            {
-                ClientObjectCacheSettings clientObjectCacheSettings = new ClientObjectCacheSettings {
-                    MaxMessageReceivedEventArgs = 4
-                };
-                ClientObjectCache.Initialize(clientObjectCacheSettings);
-            }
-            
-            this.RoundTripTime = new RoundTripTimeHelper(10, 10);
-        }
-
-        /// <summary>
-        ///     Connects to a remote server using a <see cref="BichannelClientConnection"/>.
-        /// </summary>
-        /// <param name="ip">The IP address of the server.</param>
-        /// <param name="port">The port of the server.</param>
-        /// <param name="ipVersion">The IP version to connect using.</param>
-        [Obsolete("Use other Connect overloads that automatically detect the IP version.")]
-        public void Connect(IPAddress ip, int port, IPVersion ipVersion)
-        {
-            Connect(ip, port, ipVersion, false);
-        }
-
-        /// <summary>
-        ///     Connects to a remote server using a <see cref="BichannelClientConnection"/>.
-        /// </summary>
-        /// <param name="ip">The IP address of the server.</param>
-        /// <param name="port">The port of the server.</param>
-        /// <param name="ipVersion">The IP version to connect using.</param>
-        /// <param name="noDelay">Whether to disable Nagel's algorithm or not.</param>
-        [Obsolete("Use other Connect overloads that automatically detect the IP version.")]
-        public void Connect(IPAddress ip, int port, IPVersion ipVersion, bool noDelay)
-        {
-            Connect(new BichannelClientConnection(ipVersion, ip, port, noDelay));
         }
 
         /// <summary>
@@ -244,33 +155,6 @@ namespace DarkRift.Client
             //On timeout disconnect
             if (!setupMutex.WaitOne(10000))
                 Connection.Disconnect();
-        }
-
-        /// <summary>
-        ///     Connects to a remote server in the background using a <see cref="BichannelClientConnection"/>.
-        /// </summary>
-        /// <param name="ip">The IP address of the server.</param>
-        /// <param name="port">The port of the server.</param>
-        /// <param name="ipVersion">The IP version to connect using.</param>
-        /// <param name="callback">The callback to invoke one the connection attempt has finished.</param>
-        [Obsolete("Use other ConnectInBackground overloads that automatically detect the IP version.")]
-        public void ConnectInBackground(IPAddress ip, int port, IPVersion ipVersion, ConnectCompleteHandler callback = null)
-        {
-            ConnectInBackground(ip, port, ipVersion, false, callback);
-        }
-
-        /// <summary>
-        ///     Connects to a remote server in the background using a <see cref="BichannelClientConnection"/>.
-        /// </summary>
-        /// <param name="ip">The IP address of the server.</param>
-        /// <param name="port">The port of the server.</param>
-        /// <param name="ipVersion">The IP version to connect using.</param>
-        /// <param name="callback">The callback to invoke one the connection attempt has finished.</param>
-        /// <param name="noDelay">Whether to disable Nagel's algorithm or not.</param>
-        [Obsolete("Use other ConnectInBackground overloads that automatically detect the IP version.")]
-        public void ConnectInBackground(IPAddress ip, int port, IPVersion ipVersion, bool noDelay, ConnectCompleteHandler callback = null)
-        {
-            ConnectInBackground(new BichannelClientConnection(ipVersion, ip, port, noDelay), callback);
         }
 
         /// <summary>
@@ -435,7 +319,7 @@ namespace DarkRift.Client
         }
 
         private volatile bool disposed = false;
-        
+
         /// <summary>
         ///     Disposes of the DarkRift client object.
         /// </summary>

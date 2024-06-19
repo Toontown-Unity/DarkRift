@@ -6,12 +6,7 @@
 
 using DarkRift.Dispatching;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 
 namespace DarkRift
 {
@@ -21,7 +16,7 @@ namespace DarkRift
     /// <remarks>
     ///     Must be initialized on the thread using DarkRiftServer.InitializeObjectCache() or will throw errors.
     /// </remarks>
-    internal static class ObjectCache
+    public static class ObjectCache
     {
         /// <summary>
         ///     Whether this cache has been initialized yet.

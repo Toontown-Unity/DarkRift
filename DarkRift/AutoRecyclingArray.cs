@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift
@@ -18,7 +13,7 @@ namespace DarkRift
     /// </summary>
     /// <threadsafety static="true" instance="false"/>
     // TODO tie ARA in 1-1 relationship with memory so we can count finalizes and can't accidently mess up references
-    internal class AutoRecyclingArray
+    public class AutoRecyclingArray
     {
         /// <summary>
         ///     The current backing array.

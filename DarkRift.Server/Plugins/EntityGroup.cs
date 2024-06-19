@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -62,7 +61,7 @@ namespace DarkRift.Server.Plugins
 
         /// <inheritdoc/>
         public virtual bool Contains(T item)
-        {    
+        {
             return backing.Contains(item);
         }
 
@@ -83,7 +82,7 @@ namespace DarkRift.Server.Plugins
         {
             return backing.Remove(item);
         }
-        
+
         /// <inheritdoc/>
         void ICollection<T>.Add(T item)
         {

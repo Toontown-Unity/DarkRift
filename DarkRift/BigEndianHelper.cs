@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift
 {
     /// <summary>
@@ -24,7 +19,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, short value)
         {
-            destination[offset]     = (byte)(value >> 8);
+            destination[offset] = (byte)(value >> 8);
             destination[offset + 1] = (byte)value;
         }
 
@@ -36,7 +31,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, ushort value)
         {
-            destination[offset]     = (byte)(value >> 8);
+            destination[offset] = (byte)(value >> 8);
             destination[offset + 1] = (byte)value;
         }
 
@@ -48,7 +43,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, int value)
         {
-            destination[offset]     = (byte)(value >> 24);
+            destination[offset] = (byte)(value >> 24);
             destination[offset + 1] = (byte)(value >> 16);
             destination[offset + 2] = (byte)(value >> 8);
             destination[offset + 3] = (byte)value;
@@ -62,7 +57,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, uint value)
         {
-            destination[offset]     = (byte)(value >> 24);
+            destination[offset] = (byte)(value >> 24);
             destination[offset + 1] = (byte)(value >> 16);
             destination[offset + 2] = (byte)(value >> 8);
             destination[offset + 3] = (byte)value;
@@ -76,7 +71,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, long value)
         {
-            destination[offset]     = (byte)(value >> 56);
+            destination[offset] = (byte)(value >> 56);
             destination[offset + 1] = (byte)(value >> 48);
             destination[offset + 2] = (byte)(value >> 40);
             destination[offset + 3] = (byte)(value >> 32);
@@ -94,7 +89,7 @@ namespace DarkRift
         /// <param name="value">The value to write.</param>
         public static void WriteBytes(byte[] destination, int offset, ulong value)
         {
-            destination[offset]     = (byte)(value >> 56);
+            destination[offset] = (byte)(value >> 56);
             destination[offset + 1] = (byte)(value >> 48);
             destination[offset + 2] = (byte)(value >> 40);
             destination[offset + 3] = (byte)(value >> 32);
@@ -219,7 +214,7 @@ namespace DarkRift
         {
             //Endianess handled here
             uint ivalue = ReadUInt32(source, offset);
-            
+
             unsafe
             {
                 uint* ptr = &ivalue;
@@ -237,7 +232,7 @@ namespace DarkRift
         {
             //Endianess handled here
             ulong lvalue = ReadUInt64(source, offset);
-            
+
             unsafe
             {
                 ulong* ptr = &lvalue;
@@ -268,7 +263,7 @@ namespace DarkRift
                    ((value & 0x00FF0000) >> 08) |
                    ((value & 0xFF000000) >> 24);
         }
-        
+
         /// <summary>
         ///     Swaps the byte order of a ulong.
         /// </summary>

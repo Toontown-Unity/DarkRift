@@ -4,17 +4,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift
 {
     /// <summary>
     ///     Command codes for control sequences to clients/servers.
     /// </summary>
-    internal enum CommandCode : ushort
+    public enum CommandCode : ushort
     {
         /// <summary>
         ///     A identification packet presenting a new ID to a client.

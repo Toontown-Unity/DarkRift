@@ -5,11 +5,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Server.Plugins.HealthCheck
@@ -65,7 +62,7 @@ namespace DarkRift.Server.Plugins.HealthCheck
             host = pluginLoadData.Settings["host"] ?? "localhost";
 
             port = 10666;
-            if(pluginLoadData.Settings["port"] != null)
+            if (pluginLoadData.Settings["port"] != null)
             {
                 if (!ushort.TryParse(pluginLoadData.Settings["port"], out port))
                     Logger.Error($"Health check port not a valid value. Using a value of {port} instead.");
@@ -81,7 +78,7 @@ namespace DarkRift.Server.Plugins.HealthCheck
             base.Loaded(args);
 
             httpListener.Start();
-            
+
             listenThread = new Thread(Listen);
             listenThread.Start();
 
@@ -118,10 +115,8 @@ namespace DarkRift.Server.Plugins.HealthCheck
                 {
                     context.Response.ContentType = "application/json";
 
-#pragma warning disable CS0618  // Server type is always pro now
                     using (StreamWriter writer = new StreamWriter(context.Response.OutputStream))
-                        writer.WriteLine($"{{\"listening\": true, \"startTime\": \"{ServerInfo.StartTime:yyyy-MM-ddTHH:mm:ss.fffZ}\", \"type\": \"{ServerInfo.Type}\", \"version\": \"{ServerInfo.Version}\"}}");
-#pragma warning restore CS0618
+                        writer.WriteLine($"{{\"listening\": true, \"startTime\": \"{ServerInfo.StartTime:yyyy-MM-ddTHH:mm:ss.fffZ}\", \"version\": \"{ServerInfo.Version}\"}}");
                 }
             }
         }

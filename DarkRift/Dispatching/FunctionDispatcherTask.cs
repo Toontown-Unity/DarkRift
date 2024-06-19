@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Dispatching
@@ -55,7 +52,7 @@ namespace DarkRift.Dispatching
             catch (Exception e)
             {
                 SetTaskFailed(e);
-                throw new DispatcherException("An exception occurred whilst running a dispatcher task. See inner exception for more details.", e); ;
+                throw new DispatcherException("An exception occurred whilst running a dispatcher task. See inner exception for more details.", e);
             }
 
             SetTaskComplete(synchronous);

@@ -119,7 +119,8 @@ namespace DarkRift.Server
                     helper.ReadElementCollectionTo(
                         element,
                         "connectsTo",
-                        e => {
+                        e =>
+                        {
                             ConnectsToSettings s = new ConnectsToSettings();
                             s.LoadFromXmlElement(e, helper);
                             return s;
@@ -139,7 +140,8 @@ namespace DarkRift.Server
                 helper.ReadElementCollectionTo(
                     element,
                     "group",
-                    e => {
+                    e =>
+                    {
                         GroupSettings s = new GroupSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;

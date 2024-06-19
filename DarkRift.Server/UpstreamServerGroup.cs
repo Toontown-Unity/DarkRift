@@ -4,12 +4,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using DarkRift.Client;
+using DarkRift.Server.Metrics;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
-using DarkRift.Server.Metrics;
 
 namespace DarkRift.Server
 {

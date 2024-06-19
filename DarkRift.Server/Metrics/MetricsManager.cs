@@ -87,11 +87,11 @@ namespace DarkRift.Server.Metrics
                 {
                     MetricsWriter?.Dispose();
                 }
-                
+
                 disposedValue = true;
             }
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

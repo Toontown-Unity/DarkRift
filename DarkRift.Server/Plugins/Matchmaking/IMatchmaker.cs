@@ -19,7 +19,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
         ///     Event invoked when a group of entities has been formed.
         /// </summary>
         event EventHandler<GroupFormedEventArgs<T>> GroupFormed;
-        
+
         /// <summary>
         ///     Enqueues an entity into the matchmaker.
         /// </summary>
@@ -50,7 +50,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
         ///     normally rank each other under the <see cref="RankingMatchmaker{T}.DiscardThreshold"/>).
         /// </remarks>
         IMatchmakerQueueTask<T> EnqueueGroup(IEnumerable<T> entities, EventHandler<MatchmakingStateChangedEventArgs<T>> callback = null);
-        
+
         /// <summary>
         ///     Attempts to match all clients in the queue
         /// </summary>

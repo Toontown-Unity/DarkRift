@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace DarkRift.Server.Plugins.Matchmaking
 {
@@ -156,7 +155,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
         /// </summary>
         /// <param name="pluginLoadData">The data to load with.</param>
         public RankingMatchmaker(PluginLoadData pluginLoadData)
-            : base (pluginLoadData)
+            : base(pluginLoadData)
         {
             if (float.TryParse(pluginLoadData.Settings["discardThreshold"], out float discardThreshold))
             {
@@ -229,7 +228,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
 
             base.Loaded(args);
         }
-        
+
         /// <summary>
         ///     Returns a suitability metric for the given entity pair.
         /// </summary>
@@ -267,7 +266,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
             {
                 //Rate those to be added in future
                 AddMatchesToQueueGroup(queueGroup, inQueue, context);
-                
+
                 //Add to in queue for next tick/flush
                 inQueue.Enqueue(queueGroup);
             }
@@ -314,7 +313,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
                 //Already failed, don't add match 
                 if (failed)
                     continue;
-                    
+
                 outerAcc /= group.task.Entities.Count;
 
                 //If a good enough match then add to our list of posible matches
@@ -380,7 +379,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
 
                 //Take snapshot of queue
                 SnapshotQueue();
-                
+
                 //Perform search
                 groupsFormed = DoFullSearch();
             }
@@ -575,7 +574,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
                     toTry.Push(newGroup);
                 }
             }
-            
+
             //Out of elements so no matches found a group, return failure
             return null;
         }

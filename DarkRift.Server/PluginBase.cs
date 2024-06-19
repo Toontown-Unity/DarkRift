@@ -30,21 +30,15 @@ namespace DarkRift.Server
         internal virtual bool Hidden { get; }
 
         /// <summary>
-        ///     The database manager for the server.
-        /// </summary>
-        [Obsolete("Use plugin configuration settings.")]
-        public IDatabaseManager DatabaseManager { get; }
-
-        /// <summary>
         ///     The dispatcher for this server.
         /// </summary>
         public IDispatcher Dispatcher { get; }
-        
+
         /// <summary>
         ///     Information about this server.
         /// </summary>
         public DarkRiftInfo ServerInfo { get; }
-        
+
         /// <summary>
         ///     The thread helper for the server.
         /// </summary>
@@ -73,9 +67,6 @@ namespace DarkRift.Server
         public PluginBase(PluginBaseLoadData pluginLoadData)
         {
             this.Name = pluginLoadData.Name;
-#pragma warning disable CS0618 // Type or member is obsolete
-            this.DatabaseManager = pluginLoadData.DatabaseManager;
-#pragma warning restore CS0618 // Type or member is obsolete
             this.Dispatcher = pluginLoadData.Dispatcher;
             this.ServerInfo = pluginLoadData.ServerInfo;
             this.ThreadHelper = pluginLoadData.ThreadHelper;
@@ -120,7 +111,7 @@ namespace DarkRift.Server
             {
                 if (disposing)
                 {
-                    
+
                 }
 
                 disposedValue = true;

@@ -40,7 +40,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <summary>
         ///     Whether Nagle's algorithm should be disabled.
         /// </summary>
-        public override bool NoDelay {
+        public override bool NoDelay
+        {
             get => TcpListener.NoDelay;
             set => TcpListener.NoDelay = value;
         }
@@ -138,7 +139,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             {
                 // Not on Windows, no need to worry about the option
             }
-            catch(SocketException)
+            catch (SocketException)
             {
                 // Not on Windows, no need to worry about the option
             }
@@ -380,7 +381,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <param name="completed">The function to invoke once the send is completed.</param>
         internal abstract bool SendUdpBuffer(EndPoint remoteEndPoint, MessageBuffer message, Action<int, SocketError> completed);
 
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         protected override void Dispose(bool disposing)
@@ -397,6 +398,6 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
         }
 
-#endregion
+        #endregion
     }
 }

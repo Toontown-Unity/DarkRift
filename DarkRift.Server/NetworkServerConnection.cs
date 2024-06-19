@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -27,7 +25,7 @@ namespace DarkRift.Server
         ///     The collection of end points this connection is connected to.
         /// </summary>
         public abstract IEnumerable<IPEndPoint> RemoteEndPoints { get; }
-        
+
         /// <summary>
         ///     The action to call when a message is received.
         /// </summary>
@@ -42,7 +40,7 @@ namespace DarkRift.Server
         ///     Get's an end point of the remote client.
         /// </summary>
         public abstract IPEndPoint GetRemoteEndPoint(string name);
-        
+
         /// <summary>
         ///     The client related to this server connection.
         /// </summary>
@@ -76,7 +74,7 @@ namespace DarkRift.Server
             else
                 return SendMessageUnreliable(message);
         }
-        
+
         /// <summary>
         ///     Begins listening for data.
         /// </summary>
@@ -163,7 +161,7 @@ namespace DarkRift.Server
             if (Client != null)
                 Client.Strike(StrikeReason.ConnectionRequest, message, weight);
         }
-        
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -177,9 +175,9 @@ namespace DarkRift.Server
             {
                 if (disposing)
                 {
-                    
+
                 }
-                
+
                 disposedValue = true;
             }
         }

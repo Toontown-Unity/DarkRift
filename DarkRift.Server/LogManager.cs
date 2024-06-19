@@ -110,7 +110,7 @@ namespace DarkRift.Server
             for (int i = 0; i < settings.LogWriters.Count; i++)
             {
                 ServerSpawnData.LoggingSettings.LogWriterSettings s = settings.LogWriters[i];
-                
+
                 //Create a load data object and backup
                 LogWriterLoadData loadData = new LogWriterLoadData(s.Name, server, s.Settings, GetLoggerFor(nameof(s.Name)));
                 PluginLoadData backupLoadData = new PluginLoadData(s.Name, server, s.Settings, GetLoggerFor(nameof(s.Name)), null, null);
@@ -140,7 +140,7 @@ namespace DarkRift.Server
                 fatalWriters.ToArray()
             };
         }
-        
+
         /// <summary>
         ///     Clears all writers.
         /// </summary>
@@ -237,7 +237,7 @@ namespace DarkRift.Server
         {
             return new Logger(name, this);
         }
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         private void Dispose(bool disposing)
@@ -249,15 +249,15 @@ namespace DarkRift.Server
                     foreach (LogWriter writer in logWriters)
                         writer.Dispose();
                 }
-                
+
                 disposedValue = true;
             }
         }
-        
+
         public void Dispose()
         {
             Dispose(true);
         }
-#endregion
+        #endregion
     }
 }

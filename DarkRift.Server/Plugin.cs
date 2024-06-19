@@ -4,15 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
-using DarkRift.Server.Plugins.Chat;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift.Server
 {
     /// <summary>
@@ -57,16 +48,11 @@ namespace DarkRift.Server
         protected string ResourceDirectory { get; }
 
         /// <summary>
-        ///     Helper plugin for filtering bad words out of text.
-        /// </summary>
-        public IBadWordFilter BadWordFilter => PluginManager.GetPluginByType<BadWordFilter>();
-
-        /// <summary>
         ///     Creates a new plugin using the given plugin load data.
         /// </summary>
         /// <param name="pluginLoadData">The plugin load data for this plugin.</param>
         public Plugin(PluginLoadData pluginLoadData)
-            : base (pluginLoadData)
+            : base(pluginLoadData)
         {
             ClientManager = pluginLoadData.ClientManager;
             PluginManager = pluginLoadData.PluginManager;

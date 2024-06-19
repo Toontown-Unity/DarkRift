@@ -5,11 +5,7 @@
  */
 
 using DarkRift.DataStructures;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift
 {
@@ -21,19 +17,13 @@ namespace DarkRift
         /// <summary>
         ///     Returns the smoothed round trip time to the remote and back in seconds.
         /// </summary>
-        [Obsolete("Use SmoothedRtt instead.")]
-        public float SmothedRtt => SmoothedRtt;
-
-        /// <summary>
-        ///     Returns the smoothed round trip time to the remote and back in seconds.
-        /// </summary>
         public float SmoothedRtt => movingAverage.Average;
 
         /// <summary>
         ///     Returns the latest recorded round trip time to the remote and back in seconds.
         /// </summary>
         public float LatestRtt { get; private set; }
-        
+
         /// <summary>
         ///     The number of samples used to calculate the smoothed round trip time.
         /// </summary>
@@ -64,7 +54,7 @@ namespace DarkRift
         ///     Records a ping being sent to this client.
         /// </summary>
         /// <param name="pingCode">The code to identify the ping.</param>
-        internal void RecordOutboundPing(ushort pingCode)
+        public void RecordOutboundPing(ushort pingCode)
         {
             waitingPings.Add(pingCode, Stopwatch.GetTimestamp());
         }
@@ -73,14 +63,14 @@ namespace DarkRift
         ///     Records a ping being acknowledged by this client.
         /// </summary>
         /// <param name="pingCode">The code to identify the ping.</param>
-        internal void RecordInboundPing(ushort pingCode)
+        public void RecordInboundPing(ushort pingCode)
         {
             long sendTimestamp = waitingPings[pingCode];
 
             long receiveTimestamp = Stopwatch.GetTimestamp();
 
             float rtt = (float)(receiveTimestamp - sendTimestamp) / Stopwatch.Frequency;
-            
+
             movingAverage.Add(rtt);
             LatestRtt = rtt;
         }

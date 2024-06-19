@@ -60,7 +60,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public override void StartListening()
         {
-            
+
         }
     }
 }

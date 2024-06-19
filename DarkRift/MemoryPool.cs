@@ -4,9 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace DarkRift
 {
     /// <summary>
@@ -31,7 +28,7 @@ namespace DarkRift
         ///     Pool of large byte arrays.
         /// </summary>
         private ObjectPool<byte[]> largePool;
-        
+
         /// <summary>
         ///     The minimum number of bytes in a large pool.
         /// </summary>
@@ -119,7 +116,7 @@ namespace DarkRift
                 smallPool.ReturnInstance(buffer);
             else if (buffer.Length >= ExtraSmallSize)
                 extraSmallPool.ReturnInstance(buffer);
-            
+
             //Else ignore and let the GC deal with it
         }
     }

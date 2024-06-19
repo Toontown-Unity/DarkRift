@@ -7,8 +7,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.DataStructures
 {
@@ -32,7 +30,8 @@ namespace DarkRift.DataStructures
         /// </summary>
         private int ptr;
 
-        public V this[K key] {
+        public V this[K key]
+        {
             get
             {
                 lock (backing)

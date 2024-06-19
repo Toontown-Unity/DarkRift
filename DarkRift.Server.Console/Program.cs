@@ -4,18 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DarkRift.Server;
-using System.Threading;
-using System.IO;
-using System.Collections.Specialized;
-using System.Collections;
 using DarkRift.Server.Configuration;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace DarkRift.Server.Console
 {

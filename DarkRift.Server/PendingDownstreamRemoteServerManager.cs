@@ -61,7 +61,7 @@ namespace DarkRift.Server
             /// <summary>
             ///     The message received.
             /// </summary>
-            public Message Message { get; set;  }
+            public Message Message { get; set; }
 
             /// <summary>
             ///     The send mode used.

@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Dispatching
@@ -97,7 +94,7 @@ namespace DarkRift.Dispatching
                     ThreadPool.QueueUserWorkItem(RunCallback);
             }
         }
-        
+
         /// <summary>
         ///     Actually disposes of the instance rather than recycling it.
         /// </summary>

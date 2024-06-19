@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift.Server
 {
     /// <summary>
@@ -16,30 +11,6 @@ namespace DarkRift.Server
     /// </summary>
     public abstract class LogWriter : PluginBase
     {
-        /// <summary>
-        ///     Creates a new LogWriter.
-        /// </summary>
-        /// <param name="pluginLoadData">The data to start the log writer with.</param>
-        /// <remarks>
-        ///     This constructor is now obsolete and should not be used where possible as it carries
-        ///     additional, irrelevant server components. Instead, now log writers should define a 
-        ///     constructor that uses the LogWriterLoadData which should be a drop in replacement and 
-        ///     should also provide for better unit testing.
-        ///     
-        ///     <code>
-        ///         <![CDATA[public MyLogWriter(LogWriterLoadData logWriterLoadData)
-        ///     : base(logWriterLoadData)
-        /// {
-        ///     
-        /// }]]>
-        ///     </code>
-        /// </remarks>
-        [Obsolete("Use LogWriter(LogWriterLoadData) constructor instead for better unit testing.")]
-        public LogWriter(PluginLoadData pluginLoadData)
-            : base(pluginLoadData)
-        {
-        }
-
         /// <summary>
         ///     Creates a new LogWriter.
         /// </summary>

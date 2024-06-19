@@ -7,10 +7,8 @@
 using DarkRift.Server.Metrics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace DarkRift.Server.Plugins.Listeners.Bichannel
 {
@@ -38,11 +36,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         ///     The end point of the remote client on UDP.
         /// </summary>
         public IPEndPoint RemoteUdpEndPoint { get; }
-        
+
         /// <summary>
         ///     Whether Nagel's algorithm should be disabled or not.
         /// </summary>
-        public bool NoDelay {
+        public bool NoDelay
+        {
             get => tcpSocket.NoDelay;
             set => tcpSocket.NoDelay = value;
         }
@@ -108,7 +107,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             bytesReceivedCounterTcp = bytesReceivedCounter.WithTags("tcp");
             bytesReceivedCounterUdp = bytesReceivedCounter.WithTags("udp");
         }
-        
+
         /// <summary>
         ///     Begins listening for data.
         /// </summary>
@@ -183,7 +182,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 message.Dispose();
                 return false;
             }
-            
+
             return networkListener.SendUdpBuffer(RemoteUdpEndPoint, message, UdpSendCompleted);
         }
 
@@ -279,7 +278,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
 
                     UpdateBufferPointers(args);
                 }
-                
+
                 MessageBuffer bodyBuffer = ProcessBody(args);
 
                 if (PreserveTcpOrdering)
@@ -563,7 +562,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             if (e.SocketError != SocketError.Success)
                 UnregisterAndDisconnect(e.SocketError);
-            
+
             e.Completed -= TcpSendCompleted;
 
             MessageBuffer messageBuffer = (MessageBuffer)e.UserToken;
@@ -606,7 +605,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 HandleDisconnection(error);
             }
         }
-        
+
         /// <inheritdoc/>
         public override IPEndPoint GetRemoteEndPoint(string name)
         {
@@ -618,7 +617,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 throw new ArgumentException("Endpoint name must either be TCP or UDP");
         }
 
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         protected override void Dispose(bool disposing)
@@ -636,7 +635,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 disposedValue = true;
             }
         }
-        
-#endregion
+
+        #endregion
     }
 }

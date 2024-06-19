@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkRift", "DarkRift\DarkRift.csproj", "{0633A20D-DE34-4A8E-9792-29CD56F23EBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkRift.Server", "DarkRift.Server\DarkRift.Server.csproj", "{63298298-8F65-43A7-A722-A33DC4CC9167}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkRift.Client", "DarkRift.Client\DarkRift.Client.csproj", "{A183A883-9774-4E96-8875-E574F30D5A83}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkRift.Server.Console", "DarkRift.Server.Console\DarkRift.Server.Console.csproj", "{D9A00A62-E3B6-4BA5-92B0-1A57CCE71CAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{23233529-A91B-4FBC-9316-9B21C3F4F105}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DarkRift.Schemas", "DarkRift.Schemas", "{8EC84848-AD17-4711-BC2E-8E4CEE6BDE81}"
+	ProjectSection(SolutionItems) = preProject
+		DarkRift.Schemas\Cluster.config.xsd = DarkRift.Schemas\Cluster.config.xsd
+		DarkRift.Schemas\Server.config.xsd = DarkRift.Schemas\Server.config.xsd
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0633A20D-DE34-4A8E-9792-29CD56F23EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0633A20D-DE34-4A8E-9792-29CD56F23EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0633A20D-DE34-4A8E-9792-29CD56F23EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0633A20D-DE34-4A8E-9792-29CD56F23EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63298298-8F65-43A7-A722-A33DC4CC9167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63298298-8F65-43A7-A722-A33DC4CC9167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63298298-8F65-43A7-A722-A33DC4CC9167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63298298-8F65-43A7-A722-A33DC4CC9167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A183A883-9774-4E96-8875-E574F30D5A83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A183A883-9774-4E96-8875-E574F30D5A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A183A883-9774-4E96-8875-E574F30D5A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A183A883-9774-4E96-8875-E574F30D5A83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A00A62-E3B6-4BA5-92B0-1A57CCE71CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A00A62-E3B6-4BA5-92B0-1A57CCE71CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A00A62-E3B6-4BA5-92B0-1A57CCE71CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A00A62-E3B6-4BA5-92B0-1A57CCE71CAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8EC84848-AD17-4711-BC2E-8E4CEE6BDE81} = {23233529-A91B-4FBC-9316-9B21C3F4F105}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E043ED6E-A573-4481-B1A8-575BAEB0AAC3}
+	EndGlobalSection
+EndGlobal

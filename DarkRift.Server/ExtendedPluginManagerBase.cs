@@ -5,10 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -16,7 +12,7 @@ namespace DarkRift.Server
     ///     Base plugin manager for plugin managers handling <see cref="ExtendedPluginBase"/> types.
     /// </summary>
     /// <typeparam name="T">The type of plugin being managed.</typeparam>
-    internal abstract class ExtendedPluginManagerBase<T> : PluginManagerBase<T>  where T : ExtendedPluginBase
+    internal abstract class ExtendedPluginManagerBase<T> : PluginManagerBase<T> where T : ExtendedPluginBase
     {
         /// <summary>
         ///     The server that owns this plugin manager.

@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace DarkRift
@@ -71,7 +68,7 @@ namespace DarkRift
         /// </summary>
         public static DarkRiftWriter Create()
         {
-           return Create(16, Encoding.Unicode);     // TODO DR3 Default to UTF-8
+            return Create(16, Encoding.Unicode);     // TODO DR3 Default to UTF-8
         }
 
         /// <summary>
@@ -117,7 +114,7 @@ namespace DarkRift
         {
             serializeEventSingleton = new SerializeEvent(this);
         }
-        
+
         /// <summary>
         ///     Writes a single byte to the writer.
         /// </summary>
@@ -284,16 +281,6 @@ namespace DarkRift
         ///     Writes a single serializable object to the writer.
         /// </summary>
         /// <param name="serializable">The serializable object to write.</param>
-        [Obsolete("Use Write<T>(T serializable) instead.")]
-        public void Write(IDarkRiftSerializable serializable)
-        {
-            serializable.Serialize(serializeEventSingleton);
-        }
-
-        /// <summary>
-        ///     Writes a single serializable object to the writer.
-        /// </summary>
-        /// <param name="serializable">The serializable object to write.</param>
         public void Write<T>(T serializable) where T : IDarkRiftSerializable
         {
             serializable.Serialize(serializeEventSingleton);
@@ -350,7 +337,7 @@ namespace DarkRift
             BigEndianHelper.WriteBytes(buffer.Buffer, Position, value.Length);
 
             int ptr = 0;                                    //Pointer to current boolean in value array
-            
+
             //Repeat for each byte we will need
             for (int i = 0; i < total; i++)
             {
@@ -389,7 +376,7 @@ namespace DarkRift
 
                 System.Buffer.BlockCopy(b, 0, buffer.Buffer, j, 8);
             }
-            
+
             Position += 4 + value.Length * 8;
             buffer.Count = Math.Max(Length, Position);
         }

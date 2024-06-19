@@ -4,9 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using DarkRift.Server.Metrics;
 using System;
 using System.Collections.Generic;
-using DarkRift.Server.Metrics;
 
 namespace DarkRift.Server
 {

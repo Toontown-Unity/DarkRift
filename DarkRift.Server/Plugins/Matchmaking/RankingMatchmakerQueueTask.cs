@@ -31,7 +31,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
         ///     The ranking matchmater in use.
         /// </summary>
         private RankingMatchmaker<T> matchmaker;
-        
+
         internal RankingMatchmakerQueueTask(RankingMatchmaker<T> matchmaker, EntityGroup<T> entities, EventHandler<MatchmakingStateChangedEventArgs<T>> callback)
         {
             this.matchmaker = matchmaker;

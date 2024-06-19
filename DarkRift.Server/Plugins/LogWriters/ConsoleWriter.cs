@@ -5,13 +5,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 #if INLINE_CONSOLE_METHODS
 using System.Runtime.CompilerServices;
 #endif
-using System.Text;
 
 namespace DarkRift.Server.Plugins.LogWriters
 {

@@ -4,17 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using DarkRift.Dispatching;
+using DarkRift.Server.Metrics;
+using DarkRift.Server.Plugins.Listeners.Bichannel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using DarkRift.Server.Plugins.Listeners.Bichannel;
-using DarkRift.Dispatching;
 using System.Diagnostics;
-using DarkRift.Server.Metrics;
-using System.Xml.Schema;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace DarkRift.Server
 {
@@ -23,30 +20,6 @@ namespace DarkRift.Server
     /// </summary>
     internal sealed class ClientManager : IDisposable, IClientManager
     {
-        /// <summary>
-        ///     The address the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the address of a BichannelListener called 'DefaultNetworkListener'.")]
-        public IPAddress Address => GetDefaultBichannelListenerOrError().Address;
-
-        /// <summary>
-        ///     The port the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the port of a BichannelListener called 'DefaultNetworkListener'.")]
-        public ushort Port => GetDefaultBichannelListenerOrError().Port;
-            
-        /// <summary>
-        ///     The IP version that the server is listening on.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the IP version of a BichannelListener called 'DefaultNetworkListener'.")]
-        public IPVersion IPVersion => GetDefaultBichannelListenerOrError().Address.AddressFamily == AddressFamily.InterNetworkV6 ? IPVersion.IPv6 : IPVersion.IPv4;
-
-        /// <summary>
-        ///     Whether Nagle's algorithm is disabled.
-        /// </summary>
-        [Obsolete("Use listener system instead. This will currently read the no delay property of a BichannelListener called 'DefaultNetworkListener'.")]
-        public bool NoDelay => GetDefaultBichannelListenerOrError().NoDelay;
-
         /// <summary>
         ///     Returns whether the server has been started and not yet stopped.
         /// </summary>
@@ -61,7 +34,7 @@ namespace DarkRift.Server
         ///     Invoked when a client disconnects from the server.
         /// </summary>
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        
+
         /// <summary>
         ///     Returns the number of clients currently connected.
         /// </summary>
@@ -78,16 +51,6 @@ namespace DarkRift.Server
         ///     The number of strikes a client can get before they are kicked.
         /// </summary>
         public byte MaxStrikes { get; }
-
-        /// <summary>
-        ///     Whether the fallback networking is being used for compatability.
-        /// </summary>
-        /// <remarks>
-        ///     Unity has issues with DarkRift's default (better) socket interfaces so this indicates
-        ///     the fallback networking is in use for compatability at a performance cost.
-        /// </remarks>
-        [Obsolete("Use listener system instead. This will currently read if a BichannelListener or CompatibilityBichannelListener is called 'DefaultNetworkListener'.")]
-        public bool UseFallbackNetworking => GetDefaultBichannelListenerOrError() is CompatibilityBichannelListener;
 
         /// <summary>
         ///     The clients connected to this server.

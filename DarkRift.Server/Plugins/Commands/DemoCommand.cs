@@ -5,10 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -32,7 +28,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public DemoCommand(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
-            
+
         }
 
         private void CommandHandler(object sender, CommandEventArgs e)

@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Dispatching
@@ -271,10 +269,10 @@ namespace DarkRift.Dispatching
         {
             if (executorThreadID != -1 && Thread.CurrentThread.ManagedThreadId != executorThreadID)
                 throw new InvalidOperationException("Can only execute tasks from the thread that created the dispatcher.");
-            
+
             //Get the number to execute
             int countAtStart = Count;
-            
+
             //Execute that number of tasks
             for (int i = 0; i < countAtStart; i++)
             {

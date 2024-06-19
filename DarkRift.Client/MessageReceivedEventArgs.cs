@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Client
 {
@@ -19,8 +16,8 @@ namespace DarkRift.Client
         /// <summary>
         ///     The method the data was sent using.
         /// </summary>
-        public SendMode SendMode { get; private set;  }
-        
+        public SendMode SendMode { get; private set; }
+
         /// <summary>
         ///     The tag the message was sent with.
         /// </summary>

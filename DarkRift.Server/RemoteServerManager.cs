@@ -22,7 +22,7 @@ namespace DarkRift.Server
         ///     The group the server is in.
         /// </summary>
         public string Group { get; }
-        
+
         /// <summary>
         ///     The visibility of the server.
         /// </summary>

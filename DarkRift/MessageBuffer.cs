@@ -21,7 +21,7 @@ namespace DarkRift
         ///     The array containing the data.
         /// </summary>
         public byte[] Buffer => backingBuffer.Buffer;
-        
+
         /// <summary>
         ///     The offset at which bytes of data start in the array.
         /// </summary>
@@ -66,7 +66,7 @@ namespace DarkRift
             buffer.backingBuffer = array;
             buffer.Offset = 0;
             buffer.Count = 0;
-            
+
             return buffer;
         }
 
@@ -88,7 +88,7 @@ namespace DarkRift
             buffer.Count = Count;
             return buffer;
         }
-        
+
         /// <summary>
         ///     Ensures the buffer is greater than or equal to the specified length.
         /// </summary>

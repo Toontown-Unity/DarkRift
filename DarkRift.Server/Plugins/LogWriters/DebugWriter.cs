@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.LogWriters
 {
@@ -18,7 +15,7 @@ namespace DarkRift.Server.Plugins.LogWriters
     {
         /// <inheritdoc />
         public override Version Version => new Version(1, 0, 0);
-        
+
         /// <summary>
         ///     Creates a new debug log writer using the given plugin load data.
         /// </summary>

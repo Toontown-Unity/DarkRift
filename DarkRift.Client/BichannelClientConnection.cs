@@ -6,11 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 
 namespace DarkRift.Client
 {
@@ -34,7 +31,8 @@ namespace DarkRift.Client
         /// <summary>
         ///     Whether Nagel's algorithm should be disabled or not.
         /// </summary>
-        public bool NoDelay {
+        public bool NoDelay
+        {
             get => tcpSocket.NoDelay;
             set => tcpSocket.NoDelay = value;
         }
@@ -72,7 +70,7 @@ namespace DarkRift.Client
         /// <param name="port">The port (UDP and TCP) the server is listening on.</param>
         /// <param name="noDelay">Whether to disable Nagle's algorithm or not.</param>
         public BichannelClientConnection(IPAddress ipAddress, int port, bool noDelay)
-            : this (ipAddress, port, port, noDelay)
+            : this(ipAddress, port, port, noDelay)
         {
         }
 
@@ -84,34 +82,12 @@ namespace DarkRift.Client
         /// <param name="tcpPort">The port the server is listening on for TCP.</param>
         /// <param name="noDelay">Whether to disable Nagle's algorithm or not.</param>
         public BichannelClientConnection(IPAddress ipAddress, int tcpPort, int udpPort, bool noDelay)
-            : base ()
+            : base()
         {
             RemoteTcpEndPoint = new IPEndPoint(ipAddress, tcpPort);
             RemoteUdpEndPoint = new IPEndPoint(ipAddress, udpPort);
 
             tcpSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            udpSocket = new Socket(tcpSocket.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-
-            NoDelay = noDelay;
-        }
-
-        /// <summary>
-        ///     Creates a new bichannel client.
-        /// </summary>
-        /// <param name="ipVersion">The IP version to connect via.</param>
-        /// <param name="ipAddress">The IP address of the server.</param>
-        /// <param name="port">The port the server is listening on.</param>
-        /// <param name="noDelay">Whether to disable Nagle's algorithm or not.</param>
-        [Obsolete("Use other constructors that automatically detect the IP version.")]
-        public BichannelClientConnection(IPVersion ipVersion, IPAddress ipAddress, int port, bool noDelay)
-            : base()
-        {
-            AddressFamily addressFamily = ipVersion == IPVersion.IPv6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork;
-
-            RemoteTcpEndPoint = new IPEndPoint(ipAddress, port);
-            RemoteUdpEndPoint = new IPEndPoint(ipAddress, port);
-
-            tcpSocket = new Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp);
             udpSocket = new Socket(tcpSocket.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
 
             NoDelay = noDelay;
@@ -676,7 +652,8 @@ namespace DarkRift.Client
         ///     Updates the pointers on the buffer to continue a receive operation.
         /// </summary>
         /// <param name="args">The socket args to update.</param>
-        private void UpdateBufferPointers(SocketAsyncEventArgs args) {
+        private void UpdateBufferPointers(SocketAsyncEventArgs args)
+        {
             args.SetBuffer(args.Offset + args.BytesTransferred, args.Count - args.BytesTransferred);
         }
 

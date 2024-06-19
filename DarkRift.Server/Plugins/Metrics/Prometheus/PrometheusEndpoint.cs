@@ -70,14 +70,14 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
         private readonly List<CounterMetric> counters = new List<CounterMetric>();
         private readonly List<GaugeMetric> gauges = new List<GaugeMetric>();
         private readonly List<HistogramMetric> histograms = new List<HistogramMetric>();
-        
+
 
         public PrometheusEndpoint(MetricsWriterLoadData metricsWriterLoadData) : base(metricsWriterLoadData)
         {
             host = metricsWriterLoadData.Settings["host"] ?? "localhost";
 
             port = 9796;
-            if(metricsWriterLoadData.Settings["port"] != null)
+            if (metricsWriterLoadData.Settings["port"] != null)
             {
                 if (!ushort.TryParse(metricsWriterLoadData.Settings["port"], out port))
                     Logger.Error($"Prometheus port not an valid value. Using a value of {port} instead.");
@@ -381,7 +381,7 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
             DateTimeOffset epoch = new DateTimeOffset(1970, 01, 01, 00, 00, 00, TimeSpan.Zero);
             DateTimeOffset now = DateTimeOffset.UtcNow;
 
-            return (long) now.Subtract(epoch).TotalMilliseconds;
+            return (long)now.Subtract(epoch).TotalMilliseconds;
         }
 
         /// <summary>
