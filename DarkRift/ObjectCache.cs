@@ -141,7 +141,9 @@ namespace DarkRift
         public static DarkRiftWriter GetWriter()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.DarkRiftWriterWasRetrieved();
@@ -160,7 +162,9 @@ namespace DarkRift
         public static void ReturnWriter(DarkRiftWriter writer)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.DarkRiftWriterWasReturned();
@@ -178,7 +182,9 @@ namespace DarkRift
         public static DarkRiftReader GetReader()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.DarkRiftReaderWasRetrieved();
@@ -196,7 +202,9 @@ namespace DarkRift
         public static void ReturnReader(DarkRiftReader reader)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.DarkRiftReaderWasReturned();
@@ -215,7 +223,9 @@ namespace DarkRift
         public static Message GetMessage()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MessageWasRetrieved();
@@ -234,7 +244,9 @@ namespace DarkRift
         public static void ReturnMessage(Message message)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MessageWasReturned();
@@ -253,7 +265,9 @@ namespace DarkRift
         public static MessageBuffer GetMessageBuffer()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MessageBufferWasRetrieved();
@@ -272,7 +286,9 @@ namespace DarkRift
         public static void ReturnMessageBuffer(MessageBuffer messageBuffer)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MessageBufferWasReturned();
@@ -291,7 +307,9 @@ namespace DarkRift
         public static SocketAsyncEventArgs GetSocketAsyncEventArgs()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.SocketAsyncEventArgsWasRetrieved();
@@ -310,14 +328,18 @@ namespace DarkRift
         public static void ReturnSocketAsyncEventArgs(SocketAsyncEventArgs socketAsyncEventArgs)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.SocketAsyncEventArgsWasReturned();
 #endif
 
             if (!socketAsyncEventArgsPool.ReturnInstance(socketAsyncEventArgs))
+            {
                 socketAsyncEventArgs.Dispose();
+            }
         }
 
         /// <summary>
@@ -330,7 +352,9 @@ namespace DarkRift
         public static ActionDispatcherTask GetActionDispatcherTask()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.ActionDispatcherTaskWasRetrieved();
@@ -348,14 +372,18 @@ namespace DarkRift
         public static void ReturnActionDispatcherTask(ActionDispatcherTask task)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.ActionDispatcherTaskWasReturned();
 #endif
 
             if (!actionDispatcherTaskPool.ReturnInstance(task))
+            {
                 task.ActuallyDispose();
+            }
         }
 
         /// <summary>
@@ -368,7 +396,9 @@ namespace DarkRift
         public static AutoRecyclingArray GetAutoRecyclingArray()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.AutoRecyclingArrayWasRetrieved();
@@ -387,7 +417,9 @@ namespace DarkRift
         public static void ReturnAutoRecyclingArray(AutoRecyclingArray autoRecyclingArray)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.AutoRecyclingArrayWasReturned();
@@ -407,7 +439,9 @@ namespace DarkRift
         public static byte[] GetMemory(int minLength)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MemoryWasRetrieved();
@@ -426,7 +460,9 @@ namespace DarkRift
         public static void ReturnMemory(byte[] memory)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ObjectCacheTestHelper.MemoryWasReturned();
