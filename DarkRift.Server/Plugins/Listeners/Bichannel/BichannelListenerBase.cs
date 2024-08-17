@@ -231,7 +231,13 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
 
             //Check found (should always be but will crash server otherwise)
             if (remoteEndPoint != null)
+            {
                 Logger.Trace("Connection attempt from " + remoteEndPoint + " timed out.");
+            }
+            else
+            {
+                Logger.Trace("Connection attempt from a lost remoteEndpoint timed out.");
+            }
 
             connectionAttemptTimeoutsCounter.Increment();
         }
@@ -252,15 +258,22 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 try
                 {
                     endPoint = connection.TcpSocket.RemoteEndPoint;
-
-                    connection.TcpSocket.Close();
                 }
                 catch (SocketException e)
                 {
                     if (endPoint != null)
-                        Logger.Trace("A SocketException occurred whilst cancelling the connection to " + endPoint + ". It is likely the client disconnected before the server was able to perform the operation.", e);
+                        Logger.Trace(
+                            "A SocketException occurred whilst cancelling the connection to " + endPoint +
+                            ". It is likely the client disconnected before the server was able to perform the operation.",
+                            e);
                     else
-                        Logger.Trace("A SocketException occurred whilst cancelling a connection. It is likely the client disconnected before the server was able to perform the operation.", e);
+                        Logger.Trace(
+                            "A SocketException occurred whilst cancelling a connection. It is likely the client disconnected before the server was able to perform the operation.",
+                            e);
+                }
+                finally
+                {
+                    connection.TcpSocket.Close();
                 }
 
                 PendingTcpSockets.Remove(token);

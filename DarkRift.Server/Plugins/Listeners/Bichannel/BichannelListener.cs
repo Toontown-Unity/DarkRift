@@ -67,13 +67,18 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <param name="e"></param>
         private void TcpAcceptCompleted(object sender, SocketAsyncEventArgs e)
         {
-            if (e.SocketError != SocketError.Success)
+            if (e.SocketError != SocketError.Success && e.SocketError != SocketError.TooManyOpenSockets)
             {
                 e.Completed -= TcpAcceptCompleted;
 
                 ObjectCache.ReturnSocketAsyncEventArgs(e);
-
+                Logger.Warning($"SocketError was not Success, can not continue accepting connections. {e.SocketError}");
                 return;
+            }
+            if (e.SocketError == SocketError.TooManyOpenSockets)
+            {
+                // We have too many open sockets
+                Logger.Warning($"We have too many open sockets, we will continue to try accepting connections");
             }
 
             try
