@@ -150,6 +150,7 @@ namespace DarkRift.Client
         /// <param name="connection">The connection to use to connect to the server.</param>
         public void Connect(NetworkClientConnection connection)
         {
+            connection.ClientHelloPacket = ClientHelloPacket;
             setupMutex.Reset();
 
             if (Connection != null)
