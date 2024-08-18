@@ -4,12 +4,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using DarkRift.Dispatching;
-using System.Threading;
-using DarkRift.Server.Plugins.Chat;
-using System.Collections.Specialized;
 using DarkRift.Server.Metrics;
+using System;
+using System.Collections.Specialized;
+using System.Net;
+using System.Threading;
 
 namespace DarkRift.Server
 {
@@ -44,12 +44,6 @@ namespace DarkRift.Server
         public INetworkListenerManager NetworkListenerManager => networkListenerManager;
 
         /// <summary>
-        ///     The manager for databases.
-        /// </summary>
-        [Obsolete("No direct replacement.")]
-        public IDatabaseManager DatabaseManager { get; }
-
-        /// <summary>
         ///     The server's dispatcher.
         /// </summary>
         public IDispatcher Dispatcher => dispatcher;
@@ -73,11 +67,6 @@ namespace DarkRift.Server
         ///     Information about this server.
         /// </summary>
         public DarkRiftInfo ServerInfo { get; } = new DarkRiftInfo(DateTime.Now);
-
-        /// <summary>
-        ///     Helper plugin for filtering bad words out of text.
-        /// </summary>
-        public IBadWordFilter BadWordFilter => PluginManager.GetPluginByType<BadWordFilter>();
 
         /// <summary>
         ///     The server registry connector manager.
@@ -152,7 +141,11 @@ namespace DarkRift.Server
         /// <summary>
         ///     Whether this server has been disposed yet.
         /// </summary>
-        public bool Disposed { get => disposed; private set => disposed = value; }
+        public bool Disposed
+        {
+            get => disposed;
+            private set => disposed = value;
+        }
 
         /// <summary>
         ///     Whether this server has been disposed yet.
@@ -169,9 +162,8 @@ namespace DarkRift.Server
         /// </summary>
         /// <param name="spawnData">The details of how to start the server.</param>
         public DarkRiftServer(ServerSpawnData spawnData)
-            : this (spawnData, ClusterSpawnData.CreateDefault())
+            : this(spawnData, ClusterSpawnData.CreateDefault())
         {
-
         }
 
         /// <summary>
@@ -188,8 +180,8 @@ namespace DarkRift.Server
             DataManager = new DataManager(spawnData.Data, logManager.GetLoggerFor(nameof(Server.DataManager)));
 
             //Initialize object caches before we shoot ourselves in the foot
-            bool initializedCache = ObjectCache.Initialize(spawnData.Cache.ServerObjectCacheSettings)
-                & ServerObjectCache.Initialize(spawnData.Cache.ServerObjectCacheSettings);
+            var initializedCache = ObjectCache.Initialize(spawnData.Cache.ServerObjectCacheSettings)
+                                   & ServerObjectCache.Initialize(spawnData.Cache.ServerObjectCacheSettings);
 
             //Set before loading plugins so plugins override this setting
             dispatcher = new Dispatcher(false, spawnData.DispatcherExecutorThreadID);
@@ -235,7 +227,6 @@ namespace DarkRift.Server
             pluginFactory.AddTypes(
                 new Type[]
                 {
-                    typeof(Plugins.Chat.BadWordFilter),
                     typeof(Plugins.Metrics.Prometheus.PrometheusEndpoint)
                 }
             );
@@ -244,10 +235,7 @@ namespace DarkRift.Server
             pluginFactory.AddTypes(
                 new Type[]
                 {
-                    typeof(Plugins.Listeners.Bichannel.BichannelListener),
-#pragma warning disable CS0618 // Type or member is obsolete
-                    typeof(Plugins.Listeners.Bichannel.CompatibilityBichannelListener)
-#pragma warning restore CS0618 // Type or member is obsolete
+                    typeof(Plugins.Listeners.Bichannel.BichannelListener)
                 }
             );
 
@@ -263,7 +251,9 @@ namespace DarkRift.Server
 
             //Write whether the cache was initialized
             if (!initializedCache)
+            {
                 logger.Trace("Cache already initialized, cannot update settings. The server will continue using the pre-existing cache.");
+            }
 
             //Load later stage things
             metricsManager = new MetricsManager(this, spawnData.Metrics);
@@ -300,10 +290,6 @@ namespace DarkRift.Server
                 metricsManager.GetPerMessageMetricsCollectorFor(nameof(Client))
             );
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            DatabaseManager = new DatabaseManager(spawnData.Databases);
-#pragma warning restore CS0618 // Type or member is obsolete
-
             // Now we have the prerequisites loaded we can start loading plugins
             InternalPluginManager = new PluginManager(
                 this,
@@ -321,31 +307,16 @@ namespace DarkRift.Server
             //Load default if no other listeners are present
             if (spawnData.Listeners.NetworkListeners.Count == 0)
             {
-                NameValueCollection listenerSettings = new NameValueCollection();
+                var listenerSettings = new NameValueCollection();
 
-                // Warnings disabled as we're implementing obsolete functionality
-#pragma warning disable
-                if (spawnData.Server.UseFallbackNetworking)
-                {
-                    networkListenerManager.LoadNetworkListener(
-                        typeof(Plugins.Listeners.Bichannel.CompatibilityBichannelListener),
-                        "Default",
-                        spawnData.Server.Address,
-                        spawnData.Server.Port,
-                        listenerSettings
-                    );
-                }
-                else
-                {
-                    networkListenerManager.LoadNetworkListener(
-                        typeof(Plugins.Listeners.Bichannel.BichannelListener),
-                        "Default",
-                        spawnData.Server.Address,
-                        spawnData.Server.Port,
-                        listenerSettings
-                    );
-                }
-#pragma warning restore
+                // TODO default port
+                networkListenerManager.LoadNetworkListener(
+                    typeof(Plugins.Listeners.Bichannel.BichannelListener),
+                    "DefaultNetworkListener",
+                    IPAddress.Any,
+                    4296,
+                    listenerSettings
+                );
             }
 
             CommandEngine = new CommandEngine(ThreadHelper, InternalPluginManager, logManager.GetLoggerFor(nameof(CommandEngine)));
@@ -366,22 +337,6 @@ namespace DarkRift.Server
                 InternalRemoteServerManager.SubscribeToListeners();
 
                 logger.Warning("Server clustering is in beta and is not currently considered suitable for production use.");
-            }
-        }
-
-        /// <summary>
-        ///     Starts the server.
-        /// </summary>
-        [Obsolete("User StartServer instead for better error propagation.")]
-        public void Start()
-        {
-            try
-            {
-                StartServer();
-            }
-            catch (Exception)
-            {
-                return;
             }
         }
 
@@ -477,7 +432,6 @@ namespace DarkRift.Server
         {
             if (disposing && !disposed)
             {
-
                 InternalRemoteServerManager.DeregisterServer();
 
                 InternalClientManager.Dispose();

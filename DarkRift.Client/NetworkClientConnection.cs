@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DarkRift.Client
 {
@@ -23,7 +21,7 @@ namespace DarkRift.Client
         /// </summary>
         /// <param name="messageBuffer">The message buffer received.</param>
         /// <param name="sendMode">The send mode the message was received with.</param>
-        public delegate void MessageReceviedHandler(MessageBuffer messageBuffer, SendMode sendMode);
+        public delegate void MessageReceivedHandler(MessageBuffer messageBuffer, SendMode sendMode);
 
         /// <summary>
         ///     Delegate for handling disconnections.
@@ -35,7 +33,7 @@ namespace DarkRift.Client
         /// <summary>
         ///     The method called when a message has been received.
         /// </summary>
-        public MessageReceviedHandler MessageReceived { get; set; }
+        public MessageReceivedHandler MessageReceived { get; set; }
 
         /// <summary>
         ///     The method called when this connection is disconnected.
@@ -57,7 +55,6 @@ namespace DarkRift.Client
         /// </summary>
         public NetworkClientConnection()
         {
-            
         }
 
         /// <summary>
@@ -74,14 +71,18 @@ namespace DarkRift.Client
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public virtual bool SendMessage(MessageBuffer message, SendMode sendMode)
         {
             if (sendMode == SendMode.Reliable)
+            {
                 return SendMessageReliable(message);
+            }
             else
+            {
                 return SendMessageUnreliable(message);
+            }
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace DarkRift.Client
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public abstract bool SendMessageReliable(MessageBuffer message);
 
@@ -104,7 +105,7 @@ namespace DarkRift.Client
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public abstract bool SendMessageUnreliable(MessageBuffer message);
 
@@ -132,7 +133,7 @@ namespace DarkRift.Client
         }
 
         /*
-         * To ensure compatibility with older SocketError Disconnected event parameters we 
+         * To ensure compatibility with older SocketError Disconnected event parameters we
          * need to provide SocketErrors where possible which can make this a pain in the neck.
          */
 
@@ -152,9 +153,13 @@ namespace DarkRift.Client
         {
             //Not all socket errors make sense to have an exception really
             if (error == SocketError.Success || error == SocketError.Disconnecting)
+            {
                 Disconnected?.Invoke(error, null);
+            }
             else
+            {
                 Disconnected?.Invoke(error, new SocketException((int)error));
+            }
         }
 
         /// <summary>
@@ -165,12 +170,17 @@ namespace DarkRift.Client
         {
             //Make sure socket exceptions expose socket error code
             if (exception is SocketException)
+            {
                 Disconnected?.Invoke(((SocketException)exception).SocketErrorCode, exception);
+            }
             else
+            {
                 Disconnected?.Invoke(SocketError.SocketError, exception);
+            }
         }
 
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         /// <summary>
@@ -183,7 +193,6 @@ namespace DarkRift.Client
             {
                 if (disposing)
                 {
-
                 }
 
                 disposedValue = true;
@@ -198,6 +207,7 @@ namespace DarkRift.Client
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
         }
+
         #endregion
     }
 }

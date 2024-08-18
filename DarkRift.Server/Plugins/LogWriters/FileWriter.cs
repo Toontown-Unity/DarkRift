@@ -5,10 +5,7 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.LogWriters
 {
@@ -64,8 +61,11 @@ namespace DarkRift.Server.Plugins.LogWriters
             if (disposing)
             {
                 lock (LogFileStream)
+                {
                     LogFileStream.Dispose();
+                }
             }
+
             base.Dispose(disposing);
         }
     }

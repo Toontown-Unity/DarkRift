@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace DarkRift.Server.Plugins.Matchmaking
 {
     /// <summary>
-    ///     A matchmmaker task for the <see cref="RankingMatchmaker{T}"/>.
+    ///     A matchmaker task for the <see cref="RankingMatchmaker{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of objects being used as entities.</typeparam>
     internal class RankingMatchmakerQueueTask<T> : IMatchmakerQueueTask<T>
@@ -28,16 +28,16 @@ namespace DarkRift.Server.Plugins.Matchmaking
         public EntityGroup<T> Entities { get; }
 
         /// <summary>
-        ///     The ranking matchmater in use.
+        ///     The ranking matchmaker in use.
         /// </summary>
         private RankingMatchmaker<T> matchmaker;
-        
+
         internal RankingMatchmakerQueueTask(RankingMatchmaker<T> matchmaker, EntityGroup<T> entities, EventHandler<MatchmakingStateChangedEventArgs<T>> callback)
         {
             this.matchmaker = matchmaker;
-            this.Entities = entities;
-            this.Callback = callback;
-            this.MatchmakingState = MatchmakingState.Pending;
+            Entities = entities;
+            Callback = callback;
+            MatchmakingState = MatchmakingState.Pending;
         }
 
         /// <inheritdoc/>
@@ -56,10 +56,7 @@ namespace DarkRift.Server.Plugins.Matchmaking
         {
             MatchmakingState = newState;
 
-            matchmaker.ThreadHelper.DispatchIfNeeded(() =>
-            {
-                Callback?.Invoke(this, new MatchmakingStateChangedEventArgs<T>(newState, subGroups, entities));
-            });
+            matchmaker.ThreadHelper.DispatchIfNeeded(() => { Callback?.Invoke(this, new MatchmakingStateChangedEventArgs<T>(newState, subGroups, entities)); });
         }
     }
 }

@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Client
 {
@@ -19,8 +16,8 @@ namespace DarkRift.Client
         /// <summary>
         ///     The method the data was sent using.
         /// </summary>
-        public SendMode SendMode { get; private set;  }
-        
+        public SendMode SendMode { get; private set; }
+
         /// <summary>
         ///     The tag the message was sent with.
         /// </summary>
@@ -43,7 +40,7 @@ namespace DarkRift.Client
         /// <param name="sendMode">The send mode the message was received with.</param>
         public static MessageReceivedEventArgs Create(Message message, SendMode sendMode)
         {
-            MessageReceivedEventArgs messageReceivedEventArgs = ClientObjectCache.GetMessageReceivedEventArgs();
+            var messageReceivedEventArgs = ClientObjectCache.GetMessageReceivedEventArgs();
 
             messageReceivedEventArgs.message = message;
             messageReceivedEventArgs.SendMode = sendMode;
@@ -58,7 +55,6 @@ namespace DarkRift.Client
         /// </summary>
         internal MessageReceivedEventArgs()
         {
-
         }
 
         /// <summary>
@@ -85,7 +81,9 @@ namespace DarkRift.Client
         ~MessageReceivedEventArgs()
         {
             if (!isCurrentlyLoungingInAPool)
+            {
                 ClientObjectCacheHelper.MessageReceivedEventArgsWasFinalized();
+            }
         }
     }
 }

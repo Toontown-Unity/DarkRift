@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data.Common;
-using System.Linq;
 using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
@@ -28,7 +25,7 @@ namespace DarkRift.Server.Plugins.Commands
         public override bool ThreadSafe => true;
 
         internal override bool Hidden => true;
-        
+
         public PluginController(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
         }
@@ -36,22 +33,34 @@ namespace DarkRift.Server.Plugins.Commands
         private void CommandHandler(object sender, CommandEventArgs e)
         {
             if (e.Arguments.Length < 1)
+            {
                 throw new CommandSyntaxException($"Expected 1 argument but found {e.Arguments.Length}.");
+            }
 
             if (e.Arguments[0] == "uninstall")
+            {
                 Uninstall(e);
+            }
             else if (e.Arguments[0] == "loaded")
+            {
                 ListLoaded(e);
+            }
             else if (e.Arguments[0] == "installed")
+            {
                 ListInstalled(e);
+            }
             else
+            {
                 throw new CommandSyntaxException($"Unknown operation to peform '{e.Arguments[0]}'.");
+            }
         }
 
         private void Uninstall(CommandEventArgs e)
         {
             if (e.Arguments.Length != 2)
+            {
                 throw new CommandSyntaxException();
+            }
 
             try
             {
@@ -72,21 +81,27 @@ namespace DarkRift.Server.Plugins.Commands
         private void ListLoaded(CommandEventArgs e)
         {
             if (e.Arguments.Length != 1)
+            {
                 throw new CommandSyntaxException();
+            }
 
             Plugin[] loaded;
             if (e.HasFlag("h"))
+            {
                 loaded = Server.InternalPluginManager.ActuallyGetAllPlugins();
+            }
             else
+            {
                 loaded = Server.InternalPluginManager.GetAllPlugins();
+            }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("Found ");
             sb.Append(loaded.Length);
             sb.AppendLine(" plugins loaded.");
-            for (int i = 0; i < loaded.Length; i++)
+            for (var i = 0; i < loaded.Length; i++)
             {
-                sb.Append((i+1).ToString().PadRight(4));
+                sb.Append((i + 1).ToString().PadRight(4));
                 sb.Append(loaded[i].Name.PadRight(24));
                 sb.AppendLine(loaded[i].Hidden ? "(Hidden)" : "");
             }
@@ -97,12 +112,14 @@ namespace DarkRift.Server.Plugins.Commands
         private void ListInstalled(CommandEventArgs e)
         {
             if (e.Arguments.Length != 1)
+            {
                 throw new CommandSyntaxException();
+            }
 
-            StringBuilder sb = new StringBuilder();
-                        
-            int i = 0;
-            foreach (PluginRecord plugin in Server.DataManager.ReadAllPluginRecords())
+            var sb = new StringBuilder();
+
+            var i = 0;
+            foreach (var plugin in Server.DataManager.ReadAllPluginRecords())
             {
                 sb.Append((++i).ToString().PadRight(4));
                 sb.Append(plugin.Name.PadRight(24));

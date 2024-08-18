@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -37,12 +34,15 @@ namespace DarkRift.Server
         /// <summary>
         ///     The number of strikes this accounts for.
         /// </summary>
-        public int Weight {
+        public int Weight
+        {
             get => weight;
             set
             {
                 if (value < 1)
+                {
                     throw new ArgumentException("Weight nust be at least 1. Use Forgive() instead of setting weight to zero.");
+                }
 
                 weight = value;
             }
@@ -61,8 +61,8 @@ namespace DarkRift.Server
         /// <param name="weight">The weight of the strike.</param>
         public StrikeEventArgs(StrikeReason reason, string message, int weight)
         {
-            this.Reason = reason;
-            this.Message = message;
+            Reason = reason;
+            Message = message;
             this.weight = weight;
         }
 

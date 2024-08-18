@@ -50,7 +50,7 @@ namespace DarkRift.Server
         ///     The connection to the remote server.
         /// </summary>
         /// <remarks>
-        ///     Will change reference on reconnections. Currently this is not marked volatile as that is a very exceptional circumstance and at that point
+        ///     Will change reference on reconnections. Currently, this is not marked volatile as that is a very exceptional circumstance and at that point
         ///     was can likely tolerate just waiting for something else to synchronise caches later.
         /// </remarks>
         private NetworkClientConnection connection;
@@ -129,10 +129,10 @@ namespace DarkRift.Server
         internal UpstreamRemoteServer(RemoteServerManager remoteServerManager, ushort id, string host, ushort port, UpstreamServerGroup group, DarkRiftThreadHelper threadHelper, Logger logger, MetricsCollector metricsCollector)
         {
             this.remoteServerManager = remoteServerManager;
-            this.ID = id;
-            this.Host = host;
-            this.Port = port;
-            this.serverGroup = group;
+            ID = id;
+            Host = host;
+            Port = port;
+            serverGroup = group;
             this.threadHelper = threadHelper;
             this.logger = logger;
 
@@ -151,11 +151,11 @@ namespace DarkRift.Server
             IEnumerable<IPAddress> addresses = Dns.GetHostEntry(Host).AddressList;
 
             // Try to connect to an IP address
-            // TODO this might not reconnect to the same IP, break out option to prioritised last connected to.
-            // TODO this will always try the same IP address, break out round robin option for load balancing
-            this.connection = GetResultOfFirstSuccessfulInvocationOf(addresses, (address) =>
+            // TODO this might not reconnect to the same IP, break out option to prioritise last connected to.
+            // TODO this will always try the same IP address, break out round-robin option for load balancing
+            connection = GetResultOfFirstSuccessfulInvocationOf(addresses, (address) =>
             {
-               NetworkClientConnection c = serverGroup.GetConnection(address, Port);
+                var c = serverGroup.GetConnection(address, Port);
 
                 c.MessageReceived += MessageReceivedHandler;
                 c.Disconnected += DisconnectedHandler;
@@ -165,23 +165,23 @@ namespace DarkRift.Server
                 return c;
             });
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            using (var writer = DarkRiftWriter.Create())
             {
                 writer.Write(remoteServerManager.ServerID);
 
-                using (Message message = Message.Create((ushort)CommandCode.Identify, writer))
+                using (var message = Message.Create((ushort)CommandCode.Identify, writer))
                 {
                     message.IsCommandMessage = true;
                     SendMessage(message, SendMode.Reliable);
                 }
             }
 
-            EventHandler<ServerConnectedEventArgs> handler = ServerConnected;
+            var handler = ServerConnected;
             if (handler != null)
             {
                 void DoServerConnectedEvent()
                 {
-                    long startTimestamp = Stopwatch.GetTimestamp();
+                    var startTimestamp = Stopwatch.GetTimestamp();
 
                     try
                     {
@@ -191,11 +191,11 @@ namespace DarkRift.Server
                     {
                         serverConnectedEventFailuresCounter.Increment();
 
-                        // TODO this seems bad, shouldn't we disconenct them?
+                        // TODO this seems bad, shouldn't we disconnect them?
                         logger.Error("A plugin encountered an error whilst handling the ServerConnected event. The server will still be connected. (See logs for exception)", e);
                     }
 
-                    double time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
+                    var time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
                     serverConnectedEventTimeHistogram.Report(time);
                 }
 
@@ -211,9 +211,11 @@ namespace DarkRift.Server
         /// <returns>Whether the send was successful.</returns>
         public bool SendMessage(Message message, SendMode sendMode)
         {
-            bool success = connection?.SendMessage(message.ToBuffer(), sendMode) ?? false;
+            var success = connection?.SendMessage(message.ToBuffer(), sendMode) ?? false;
             if (success)
+            {
                 messagesSentCounter.Increment();
+            }
 
             return success;
         }
@@ -231,18 +233,22 @@ namespace DarkRift.Server
         /// <summary>
         ///     Callback for when data is received.
         /// </summary>
-        /// <param name="buffer">The data recevied.</param>
+        /// <param name="buffer">The data received.</param>
         /// <param name="sendMode">The SendMode used to send the data.</param>
         private void MessageReceivedHandler(MessageBuffer buffer, SendMode sendMode)
         {
             messagesReceivedCounter.Increment();
 
-            using (Message message = Message.Create(buffer, true))
+            using (var message = Message.Create(buffer, true))
             {
                 if (message.IsCommandMessage)
+                {
                     HandleCommand(message);
+                }
                 else
+                {
                     HandleMessage(message, sendMode);
+                }
             }
         }
 
@@ -252,7 +258,7 @@ namespace DarkRift.Server
         /// <param name="message">The message that was received.</param>
         private void HandleCommand(Message message)
         {
-            using (DarkRiftReader reader = message.GetReader())
+            using (var reader = message.GetReader())
             {
                 switch ((CommandCode)message.Tag)
                 {
@@ -267,18 +273,18 @@ namespace DarkRift.Server
         ///     Handles a message received.
         /// </summary>
         /// <param name="message">The message that was received.</param>
-        /// <param name="sendMode">The send mode the emssage was received with.</param>
+        /// <param name="sendMode">The send mode the message was received with.</param>
         private void HandleMessage(Message message, SendMode sendMode)
         {
-            // Get another reference to the message so 1. we can control the backing array's lifecycle and thus it won't get disposed of before we dispatch, and
+            // Get another reference to the message so 1. we can control the backing array's lifecycle, and thus it won't get disposed of before we dispatch, and
             // 2. because the current message will be disposed of when this method returns.
-            Message messageReference = message.Clone();
+            var messageReference = message.Clone();
 
             void DoMessageReceived()
             {
-                ServerMessageReceivedEventArgs args = ServerMessageReceivedEventArgs.Create(message, sendMode, this);
+                var args = ServerMessageReceivedEventArgs.Create(message, sendMode, this);
 
-                long startTimestamp = Stopwatch.GetTimestamp();
+                var startTimestamp = Stopwatch.GetTimestamp();
 
                 try
                 {
@@ -297,7 +303,7 @@ namespace DarkRift.Server
                     args.Dispose();
                 }
 
-                double time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
+                var time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
                 messageReceivedEventTimeHistogram.Report(time);
             }
 
@@ -308,18 +314,18 @@ namespace DarkRift.Server
         /// <summary>
         /// Called when the connection is lost.
         /// </summary>
-        /// <param name="error">The socket error that ocurred</param>
-        /// <param name="exception">The exception that ocurred.</param>
+        /// <param name="error">The socket error that occurred</param>
+        /// <param name="exception">The exception that occurred.</param>
         private void DisconnectedHandler(SocketError error, Exception exception)
         {
             serverGroup.DisconnectedHandler(connection, this, exception);
 
-            EventHandler<ServerDisconnectedEventArgs> handler = ServerDisconnected;
+            var handler = ServerDisconnected;
             if (handler != null)
             {
                 void DoServerDisconnectedEvent()
                 {
-                    long startTimestamp = Stopwatch.GetTimestamp();
+                    var startTimestamp = Stopwatch.GetTimestamp();
 
                     try
                     {
@@ -332,7 +338,7 @@ namespace DarkRift.Server
                         logger.Error("A plugin encountered an error whilst handling the ServerDisconnected event. (See logs for exception)", e);
                     }
 
-                    double time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
+                    var time = (double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency;
                     serverDisconnectedEventTimeHistogram.Report(time);
                 }
 
@@ -346,12 +352,12 @@ namespace DarkRift.Server
         /// <typeparam name="T">The type of inbound data.</typeparam>
         /// <typeparam name="TResult">The type of data being returned.</typeparam>
         /// <param name="inbound">The data to test the function against.</param>
-        /// <param name="function">The function to test each peice fo data against.</param>
+        /// <param name="function">The function to test each piece fo data against.</param>
         /// <returns>The first result.</returns>
         private TResult GetResultOfFirstSuccessfulInvocationOf<T, TResult>(IEnumerable<T> inbound, Func<T, TResult> function) where TResult : class
         {
             Exception lastException = null;
-            foreach (T t in inbound)
+            foreach (var t in inbound)
             {
                 try
                 {
@@ -382,17 +388,17 @@ namespace DarkRift.Server
         ///     Handles disposing of the connection.
         /// </summary>
         /// <param name="disposing"></param>
-#pragma warning disable CS0628
-        protected void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing && !disposed)
             {
                 disposed = true;
 
                 if (connection != null)
+                {
                     connection.Dispose();
+                }
             }
         }
-#pragma warning restore CS0628
     }
 }

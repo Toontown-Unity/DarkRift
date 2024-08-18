@@ -5,11 +5,7 @@
  */
 
 using DarkRift.Dispatching;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -22,12 +18,6 @@ namespace DarkRift.Server
         ///     The name to give the plugin.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        ///     The database manager to pass to the plugin.
-        /// </summary>
-        [Obsolete("Use plugin configuration settings.")]
-        public IDatabaseManager DatabaseManager { get; set; }
 
         /// <summary>
         ///     The dispatcher to pass to the plugin.
@@ -52,7 +42,7 @@ namespace DarkRift.Server
         /// <summary>
         ///     The server's log manager.
         /// </summary>
-        public ILogManager LogManager { get; set;  }
+        public ILogManager LogManager { get; set; }
 
         /// <summary>
         ///     The logger this plugin will use.
@@ -67,9 +57,6 @@ namespace DarkRift.Server
         internal PluginBaseLoadData(string name, DarkRiftServer server, NameValueCollection settings, Logger logger)
             : this(name, settings, server.ServerInfo, server.ThreadHelper)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            DatabaseManager = server.DatabaseManager;
-#pragma warning restore CS0618 // Type or member is obsolete
             Dispatcher = server.Dispatcher;
             LogManager = server.LogManager;
             Logger = logger;
@@ -85,10 +72,10 @@ namespace DarkRift.Server
         /// <param name="threadHelper">The server's thread helper.</param>
         public PluginBaseLoadData(string name, NameValueCollection settings, DarkRiftInfo serverInfo, DarkRiftThreadHelper threadHelper)
         {
-            this.Name = name;
-            this.Settings = settings;
-            this.ServerInfo = serverInfo;
-            this.ThreadHelper = threadHelper;
+            Name = name;
+            Settings = settings;
+            ServerInfo = serverInfo;
+            ThreadHelper = threadHelper;
         }
     }
 }

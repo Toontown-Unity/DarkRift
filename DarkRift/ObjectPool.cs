@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Runtime.CompilerServices;
 
 
 namespace DarkRift
@@ -16,7 +15,7 @@ namespace DarkRift
     /// <remarks>
     ///     This object is not thread safe as it is intended to be used with the ThreadStatic attribute.
     /// </remarks>
-    internal class ObjectPool<T>
+    public class ObjectPool<T>
     {
         /// <summary>
         ///     The maximum number of objects allowed in this pool per thread.
@@ -45,7 +44,7 @@ namespace DarkRift
         /// <param name="generate">The function that will be invoked to generate a new instance. This must be thread safe.</param>
         public ObjectPool(int maxObjects, Func<T> generate)
         {
-            this.MaxObjects = maxObjects;
+            MaxObjects = maxObjects;
             this.generate = generate;
 
             pool = new T[maxObjects];
@@ -61,9 +60,13 @@ namespace DarkRift
         public T GetInstance()
         {
             if (Count > 0)
+            {
                 return pool[--Count];
+            }
             else
+            {
                 return generate();
+            }
         }
 
         /// <summary>

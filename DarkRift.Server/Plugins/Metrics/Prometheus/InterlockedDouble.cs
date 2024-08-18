@@ -4,10 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Server.Plugins.Metrics.Prometheus
@@ -36,14 +32,16 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
         /// <returns>The new value of the double.</returns>
         public static double Add(ref double location, double value)
         {
-            double newCurrentValue = location; // non-volatile read, so may be stale
+            var newCurrentValue = location; // non-volatile read, so may be stale
             while (true)
             {
-                double currentValue = newCurrentValue;
-                double newValue = currentValue + value;
+                var currentValue = newCurrentValue;
+                var newValue = currentValue + value;
                 newCurrentValue = Interlocked.CompareExchange(ref location, newValue, currentValue);
                 if (newCurrentValue == currentValue)
+                {
                     return newValue;
+                }
             }
         }
     }

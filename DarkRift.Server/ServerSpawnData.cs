@@ -6,15 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Text;
-using System.Xml;
-using System.Configuration;
-using System.IO;
-
-using System.Net;
 using System.Collections.Specialized;
+using System.Net;
+using System.Xml.Linq;
 
 namespace DarkRift.Server
 {
@@ -44,17 +38,11 @@ namespace DarkRift.Server
         ///     The settings for the log writer plugins and general logging.
         /// </summary>
         public LoggingSettings Logging { get; set; } = new LoggingSettings();
-        
+
         /// <summary>
         ///     The settings for resolving and loading plugins.
         /// </summary>
         public PluginsSettings Plugins { get; set; } = new PluginsSettings();
-
-        /// <summary>
-        ///     The settings for database connections.
-        /// </summary>
-        [Obsolete("Use configuration settings under the plugin that requires the database connection string.")]
-        public DatabaseSettings Databases { get; set; } = new DatabaseSettings();
 
         /// <summary>
         ///     The settings for the object cache.
@@ -67,7 +55,7 @@ namespace DarkRift.Server
         public ListenersSettings Listeners { get; set; } = new ListenersSettings();
 
         /// <summary>
-        ///     The settings for the server regirsty.
+        ///     The settings for the server registry.
         /// </summary>
         public ServerRegistrySettings ServerRegistry { get; set; } = new ServerRegistrySettings();
 
@@ -93,39 +81,9 @@ namespace DarkRift.Server
         public class ServerSettings
         {
             /// <summary>
-            ///     The address the server will listen on.
-            /// </summary>
-            [Obsolete("Address is obsolete, use listeners system instead. These properties will only have effect if no listeners are defined.")]
-            public IPAddress Address { get; set; }
-
-            /// <summary>
-            ///     The port number that the server should listen on.
-            /// </summary>
-            [Obsolete("Port is obsolete, use listeners system instead. These properties will only have effect if no listeners are defined.")]
-            public ushort Port { get; set; }
-
-            /// <summary>
-            ///     The IP version to host the server on.
-            /// </summary>
-            [Obsolete("IPVersion is obsolete, use listeners system instead. These properties will only have effect if no listeners are defined.")]
-            public IPVersion IPVersion { get; set; }
-
-            /// <summary>
-            ///     Whether to disable Nagle's algorithm.
-            /// </summary>
-            [Obsolete("NoDelay is obsolete, use listeners system instead. These properties will only have effect if no listeners are defined.")]
-            public bool NoDelay { get; set; }
-
-            /// <summary>
             ///     The number of strikes that can be received before the client is automatically kicked.
             /// </summary>
             public byte MaxStrikes { get; set; }
-
-            /// <summary>
-            ///     Whether the fallback networking system should be used for compatability with Unity.
-            /// </summary>
-            [Obsolete("UseFallbackNetworking is obsolete, use CombatabilityBichannelListener instead. These properties will only have effect if no listeners are defined.")]
-            public bool UseFallbackNetworking { get; set; }
 
             /// <summary>
             ///     The server group this server belongs to.
@@ -133,7 +91,7 @@ namespace DarkRift.Server
             public string ServerGroup { get; set; }
 
             /// <summary>
-            ///     The number of times to try to reconnect to a server before considering it unconnectable.
+            ///     The number of times to try to reconnect to a server before considering it unreachable.
             /// </summary>
             public ushort ReconnectAttempts { get; set; } = 5;
 
@@ -145,45 +103,9 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
-
-                // Warnings disabled as we're implementing obsolete functionality
-#pragma warning disable
-                //Read address
-                Address = helper.ReadIPAttributeOrDefault(
-                    element, 
-                    "address",
-                    IPAddress.Any
-                );
-
-                //Read port
-                Port = helper.ReadUInt16AttributeOrDefault(
-                    element,
-                    "port",
-                    4296
-                );
-
-                //Read the ip type
-                IPVersion = helper.ReadIPVersionAttributeOrDefault(
-                    element,
-                    "ipVersion",
-                    IPVersion.IPv4
-                );
-
-                //Read no delay
-                NoDelay = helper.ReadBooleanAttribute(
-                    element,
-                    "noDelay",
-                    false
-                );
-
-                //Read use fallback networking
-                UseFallbackNetworking = helper.ReadBooleanAttribute(
-                    element,
-                    "useFallback",
-                    false
-                );
-#pragma warning restore
+                }
 
                 //Read max strikes
                 MaxStrikes = helper.ReadByteAttribute(
@@ -252,7 +174,9 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     //Read source
                     Source = helper.ReadStringAttribute(
@@ -284,15 +208,17 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 //Read search paths
                 helper.ReadElementCollectionTo(
-                    element, 
-                    "pluginSearchPath", 
+                    element,
+                    "pluginSearchPath",
                     e =>
                     {
-                        PluginSearchPath psp = new PluginSearchPath();
+                        var psp = new PluginSearchPath();
                         psp.LoadFromXmlElement(e, helper);
                         return psp;
                     },
@@ -311,7 +237,7 @@ namespace DarkRift.Server
             ///     The directory to store data in.
             /// </summary>
             public string Directory { get; set; } = "Data/";
-            
+
             /// <summary>
             ///     Loads the server settings from the specified XML element.
             /// </summary>
@@ -320,7 +246,9 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 //Read data directory
                 Directory = helper.ReadStringAttribute(
@@ -377,7 +305,6 @@ namespace DarkRift.Server
                 /// </summary>
                 public LogWriterSettings()
                 {
-
                 }
 
                 /// <summary>
@@ -388,7 +315,9 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     Type = helper.ReadStringAttribute(
                         element,
@@ -417,7 +346,6 @@ namespace DarkRift.Server
             /// </summary>
             public LoggingSettings()
             {
-
             }
 
             /// <summary>
@@ -428,12 +356,14 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 StartupLogLevels = helper.ReadLogLevelsAttributeOrDefault(
-                        element,
-                        "startupLevels",
-                        new LogType[] { LogType.Info, LogType.Warning, LogType.Error, LogType.Fatal }
+                    element,
+                    "startupLevels",
+                    new LogType[] { LogType.Info, LogType.Warning, LogType.Error, LogType.Fatal }
                 );
 
                 //Load writers
@@ -441,8 +371,9 @@ namespace DarkRift.Server
                 helper.ReadElementCollectionTo(
                     logWritersElement,
                     "logWriter",
-                    e => {
-                        LogWriterSettings s = new LogWriterSettings();
+                    e =>
+                    {
+                        var s = new LogWriterSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;
                     },
@@ -451,7 +382,6 @@ namespace DarkRift.Server
             }
         }
 
-        
 
         /// <summary>
         ///     Handles the settings for plugins.
@@ -498,14 +428,16 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     //Type attribute.
                     Type = helper.ReadStringAttribute(
                         element,
                         "type"
                     );
-                    
+
                     //Load attribute.
                     Load = helper.ReadBooleanAttribute(
                         element,
@@ -519,7 +451,7 @@ namespace DarkRift.Server
                     );
                 }
             }
-            
+
             /// <summary>
             ///     Loads the plugins settings from the specified XML element.
             /// </summary>
@@ -528,7 +460,9 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 //LoadByDefault attribute.
                 LoadByDefault = helper.ReadBooleanAttribute(
@@ -543,88 +477,11 @@ namespace DarkRift.Server
                     "plugin",
                     e =>
                     {
-                        PluginSettings pluginSettings = new PluginSettings();
+                        var pluginSettings = new PluginSettings();
                         pluginSettings.LoadFromXmlElement(e, helper);
                         return pluginSettings;
                     },
                     Plugins
-                );
-            }
-        }
-
-        /// <summary>
-        ///     Holds settings related to loading databases for plugins.
-        /// </summary>
-        [Serializable]
-        [Obsolete("Use configuration settings under the plugin that requires the database connection string.")]
-        public class DatabaseSettings
-        {
-            /// <summary>
-            ///     The databases to connect to.
-            /// </summary>
-            public List<DatabaseConnectionData> Databases { get; } = new List<DatabaseConnectionData>();
-
-            /// <summary>
-            ///     Holds data relating to a specific connection.
-            /// </summary>
-            [Serializable]
-            [Obsolete("Use configuration settings under the plugin that requires the database connection string.")]
-            public class DatabaseConnectionData
-            {
-                /// <summary>
-                ///     The name of the connection.
-                /// </summary>
-                public string Name { get; set; }
-
-                /// <summary>
-                ///     The connection string to create the connection with.
-                /// </summary>
-                public string ConnectionString { get; set; }
-
-                /// <summary>
-                ///     Creates a new Database Connection data object.
-                /// </summary>
-                /// <param name="name">The name of the connection.</param>
-                /// <param name="connectionString">The connection string for the connection.</param>
-                public DatabaseConnectionData(string name, string connectionString)
-                {
-                    this.Name = name;
-                    this.ConnectionString = connectionString;
-                }
-            }
-
-            /// <summary>
-            ///     Loads the database settings from the specified XML element.
-            /// </summary>
-            /// <param name="element">The XML element to load from.</param>
-            /// <param name="helper">The XML configuration helper being used.</param>
-            internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
-            {
-                if (element == null)
-                    return;
-
-                //Load databases
-                helper.ReadElementCollectionTo(
-                    element,
-                    "database",
-                    e =>
-                    {
-                        string name = helper.ReadStringAttribute(
-                            e,
-                            "name"
-                        );
-
-                        string connectionString = helper.ReadStringAttribute(
-                            e,
-                            "connectionString"
-                        );
-                        
-                        return new DatabaseConnectionData(
-                            name,
-                            connectionString
-                        );
-                    },
-                    Databases
                 );
             }
         }
@@ -692,44 +549,6 @@ namespace DarkRift.Server
             /// <summary>
             ///     The settings for the object cache.
             /// </summary>
-            [Obsolete("Use ServerObjectCacheSettings instead.")]
-            public ObjectCacheSettings ObjectCacheSettings
-            {
-                get => ServerObjectCacheSettings;
-                set
-                {
-                    if (value is ServerObjectCacheSettings)
-                    {
-                        ServerObjectCacheSettings = (ServerObjectCacheSettings)value;
-                    }
-                    else
-                    {
-                        ServerObjectCacheSettings.MaxWriters = value.MaxWriters;
-                        ServerObjectCacheSettings.MaxReaders = value.MaxReaders;
-                        ServerObjectCacheSettings.MaxMessages = value.MaxMessages;
-                        ServerObjectCacheSettings.MaxMessageBuffers = value.MaxMessageBuffers;
-                        ServerObjectCacheSettings.MaxSocketAsyncEventArgs = value.MaxSocketAsyncEventArgs;
-                        ServerObjectCacheSettings.MaxActionDispatcherTasks = value.MaxActionDispatcherTasks;
-                        ServerObjectCacheSettings.MaxAutoRecyclingArrays = value.MaxAutoRecyclingArrays;
-                        ServerObjectCacheSettings.MaxMessageReceivedEventArgs = 4;
-
-                        ServerObjectCacheSettings.ExtraSmallMemoryBlockSize = value.ExtraSmallMemoryBlockSize;
-                        ServerObjectCacheSettings.MaxExtraSmallMemoryBlocks = value.MaxExtraSmallMemoryBlocks;
-                        ServerObjectCacheSettings.SmallMemoryBlockSize = value.SmallMemoryBlockSize;
-                        ServerObjectCacheSettings.MaxSmallMemoryBlocks = value.MaxSmallMemoryBlocks;
-                        ServerObjectCacheSettings.MediumMemoryBlockSize = value.MediumMemoryBlockSize;
-                        ServerObjectCacheSettings.MaxMediumMemoryBlocks = value.MaxMediumMemoryBlocks;
-                        ServerObjectCacheSettings.LargeMemoryBlockSize = value.LargeMemoryBlockSize;
-                        ServerObjectCacheSettings.MaxLargeMemoryBlocks = value.MaxLargeMemoryBlocks;
-                        ServerObjectCacheSettings.ExtraLargeMemoryBlockSize = value.ExtraLargeMemoryBlockSize;
-                        ServerObjectCacheSettings.MaxExtraLargeMemoryBlocks = value.MaxExtraLargeMemoryBlocks;
-                    }
-                }
-            }
-
-            /// <summary>
-            ///     The settings for the object cache.
-            /// </summary>
             public ServerObjectCacheSettings ServerObjectCacheSettings { get; set; } = new ServerObjectCacheSettings();
 
             /// <summary>
@@ -770,7 +589,7 @@ namespace DarkRift.Server
                     ServerObjectCacheSettings.MaxSocketAsyncEventArgs = helper.ReadUInt16AttributeOrDefault(element, "maxCachedSocketAsyncEventArgs", 32);
                     ServerObjectCacheSettings.MaxActionDispatcherTasks = helper.ReadUInt16AttributeOrDefault(element, "maxActionDispatcherTasks", 16);
                     ServerObjectCacheSettings.MaxAutoRecyclingArrays = helper.ReadUInt16AttributeOrDefault(element, "maxAutoRecyclingArrays", 4);
-                    ServerObjectCacheSettings.MaxMessageReceivedEventArgs= helper.ReadUInt16AttributeOrDefault(element, "maxMessageReceivedEventArgs", 4);
+                    ServerObjectCacheSettings.MaxMessageReceivedEventArgs = helper.ReadUInt16AttributeOrDefault(element, "maxMessageReceivedEventArgs", 4);
 
                     ServerObjectCacheSettings.ExtraSmallMemoryBlockSize = helper.ReadUInt16AttributeOrDefault(element, "extraSmallMemoryBlockSize", 16);
                     ServerObjectCacheSettings.MaxExtraSmallMemoryBlocks = helper.ReadUInt16AttributeOrDefault(element, "maxExtraSmallMemoryBlocks", 4);
@@ -834,7 +653,6 @@ namespace DarkRift.Server
                 // TODO add constructors to these objects
                 public NetworkListenerSettings()
                 {
-
                 }
 
                 /// <summary>
@@ -845,7 +663,9 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     Type = helper.ReadStringAttribute(
                         element,
@@ -868,7 +688,7 @@ namespace DarkRift.Server
                         "port",
                         0
                     );
-                    
+
                     helper.ReadAttributeCollectionTo(
                         element.Element("settings"),
                         Settings
@@ -881,7 +701,6 @@ namespace DarkRift.Server
             /// </summary>
             public ListenersSettings()
             {
-
             }
 
             /// <summary>
@@ -892,13 +711,16 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 helper.ReadElementCollectionTo(
                     element,
                     "listener",
-                    e => {
-                        NetworkListenerSettings s = new NetworkListenerSettings();
+                    e =>
+                    {
+                        var s = new NetworkListenerSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;
                     },
@@ -947,7 +769,9 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     //Type attribute.
                     Type = helper.ReadStringAttribute(
@@ -967,7 +791,6 @@ namespace DarkRift.Server
             /// </summary>
             public MetricsSettings()
             {
-
             }
 
             /// <summary>
@@ -978,7 +801,9 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 // Load writer
                 MetricsWriter.LoadFromXmlElement(element.Element("metricsWriter"), helper);
@@ -1036,7 +861,9 @@ namespace DarkRift.Server
                 internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
                 {
                     if (element == null)
+                    {
                         return;
+                    }
 
                     //Type attribute.
                     Type = helper.ReadStringAttribute(
@@ -1056,7 +883,6 @@ namespace DarkRift.Server
             /// </summary>
             public ServerRegistrySettings()
             {
-
             }
 
             /// <summary>
@@ -1067,7 +893,9 @@ namespace DarkRift.Server
             internal void LoadFromXmlElement(XElement element, ConfigurationFileHelper helper)
             {
                 if (element == null)
+                {
                     return;
+                }
 
                 // Load writer
                 ServerRegistryConnector.LoadFromXmlElement(element.Element("serverRegistryConnector"), helper);
@@ -1118,20 +946,17 @@ namespace DarkRift.Server
         public static ServerSpawnData CreateFromXml(XDocument document, NameValueCollection variables)
         {
             //Create a new server spawn data.
-            ServerSpawnData spawnData = new ServerSpawnData();
+            var spawnData = new ServerSpawnData();
 
-            ConfigurationFileHelper helper = new ConfigurationFileHelper(variables, $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}configuration/server/", $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}advanced/configuration_variables.html");
+            var helper = new ConfigurationFileHelper(variables, $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}configuration/server/", $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}advanced/configuration_variables.html");
 
-            XElement root = document.Root;
+            var root = document.Root;
 
             spawnData.Server.LoadFromXmlElement(helper.GetRequiredElement(root, "server"), helper);
             spawnData.PluginSearch.LoadFromXmlElement(helper.GetRequiredElement(root, "pluginSearch"), helper);
             spawnData.Data.LoadFromXmlElement(root.Element("data"), helper);
             spawnData.Logging.LoadFromXmlElement(helper.GetRequiredElement(root, "logging"), helper);
             spawnData.Plugins.LoadFromXmlElement(helper.GetRequiredElement(root, "plugins"), helper);
-#pragma warning disable CS0618 // Type or member is obsolete
-            spawnData.Databases.LoadFromXmlElement(root.Element("databases"), helper);
-#pragma warning restore CS0618 // Type or member is obsolete
             spawnData.ServerRegistry.LoadFromXmlElement(root.Element("serverRegistry"), helper);
             spawnData.Cache.LoadFromXmlElement(root.Element("cache"), helper);
             spawnData.Listeners.LoadFromXmlElement(helper.GetRequiredElement(root, "listeners"), helper);
@@ -1156,21 +981,6 @@ namespace DarkRift.Server
         /// </summary>
         public ServerSpawnData()
         {
-
-        }
-
-        /// <summary>
-        ///     Creates a new server spawn data with necessary settings.
-        /// </summary>
-        /// <param name="address">The address the server should listen on.</param>
-        /// <param name="port">The port the server should listen on.</param>
-        /// <param name="ipVersion">The IP protocol the server should listen on.</param>
-        [Obsolete("Specify these properties using a network listener.")]
-        public ServerSpawnData(IPAddress address, ushort port, IPVersion ipVersion)
-        {
-            this.Server.Address = address;
-            this.Server.Port = port;
-            this.Server.IPVersion = ipVersion;
         }
     }
 }

@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -29,7 +26,7 @@ namespace DarkRift.Server
         private readonly DarkRiftServer server;
 
         /// <summary>
-        ///     The server's datamanager.
+        ///     The server's data manager.
         /// </summary>
         private readonly DataManager dataManager;
 
@@ -50,7 +47,7 @@ namespace DarkRift.Server
             this.dataManager = dataManager;
             this.pluginFactory = pluginFactory;
         }
-        
+
         /// <summary>
         ///     Load the plugin given.
         /// </summary>
@@ -63,9 +60,11 @@ namespace DarkRift.Server
         {
             //Ensure the resource directory is present
             if (createResourceDirectory)
+            {
                 dataManager.CreateResourceDirectory(type.Name);
-            
-            T plugin = pluginFactory.Create<T>(type, pluginLoadData);
+            }
+
+            var plugin = pluginFactory.Create<T>(type, pluginLoadData);
 
             plugins.Add(name, plugin);
 
@@ -84,9 +83,11 @@ namespace DarkRift.Server
         {
             //Ensure the resource directory is present
             if (createResourceDirectory)
+            {
                 dataManager.CreateResourceDirectory(type);
+            }
 
-            T plugin = pluginFactory.Create<T>(type, pluginLoadData);
+            var plugin = pluginFactory.Create<T>(type, pluginLoadData);
 
             plugins.Add(name, plugin);
 
@@ -99,8 +100,10 @@ namespace DarkRift.Server
         protected IEnumerable<T> GetPlugins()
         {
             if (!server.Loaded)
+            {
                 throw new InvalidOperationException($"You cannot search for plugins during initialization, use the Loaded event instead: {server.ServerInfo.DocumentationRoot}advanced/installs_and_upgrades.html#loaded");
-            
+            }
+
             return plugins.Values;
         }
 
@@ -110,7 +113,9 @@ namespace DarkRift.Server
         protected T GetPlugin(string name)
         {
             if (!server.Loaded)
+            {
                 throw new InvalidOperationException($"You cannot search for plugins during initialization, use the Loaded event instead: {server.ServerInfo.DocumentationRoot}advanced/installs_and_upgrades.html#loaded");
+            }
 
             return plugins[name];
         }
@@ -119,7 +124,7 @@ namespace DarkRift.Server
         ///     Searches for the given plugin name.
         /// </summary>
         /// <param name="name">The name of the plugin.</param>
-        /// <returns>Whether the plugins was found.</returns>
+        /// <returns>Whether the plugins were found.</returns>
         protected bool ContainsPlugin(string name)
         {
             return plugins.ContainsKey(name);
@@ -142,8 +147,10 @@ namespace DarkRift.Server
         {
             if (disposing)
             {
-                foreach (T plugin in plugins.Values)
+                foreach (var plugin in plugins.Values)
+                {
                     plugin.Dispose();
+                }
             }
         }
     }

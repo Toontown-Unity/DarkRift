@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift.Dispatching
@@ -49,8 +46,8 @@ namespace DarkRift.Dispatching
         /// </summary>
         internal DispatcherTask()
         {
-            this.manualResetEvent = new ManualResetEvent(false);
-            this.TaskState = DispatcherTaskState.Queued;
+            manualResetEvent = new ManualResetEvent(false);
+            TaskState = DispatcherTaskState.Queued;
         }
 
         /// <summary>
@@ -65,9 +62,13 @@ namespace DarkRift.Dispatching
         protected void SetTaskComplete(bool completedImmediate)
         {
             if (completedImmediate)
+            {
                 TaskState = DispatcherTaskState.CompletedImmediate;
+            }
             else
+            {
                 TaskState = DispatcherTaskState.CompletedQueued;
+            }
 
             manualResetEvent.Set();
         }

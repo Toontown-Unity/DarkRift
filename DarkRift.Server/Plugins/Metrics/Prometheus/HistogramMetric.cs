@@ -5,9 +5,6 @@
  */
 
 using DarkRift.Server.Metrics;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading;
 
 namespace DarkRift.Server.Plugins.Metrics.Prometheus
@@ -42,7 +39,7 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
         /// The preformatted metric text for sum.
         /// </summary>
         internal string PreformattedSum { get; }
-        
+
         /// <summary>
         /// The preformatted metric text for count.
         /// </summary>
@@ -54,37 +51,39 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
         private double sum;
 
         /// <summary>
-        /// The current upper bound of each buckets.
+        /// The current upper bound of each bucket.
         /// </summary>
         private readonly double[] bucketUpperBounds;
 
         /// <summary>
-        /// The current counts of each buckets.
+        /// The current counts of each bucket.
         /// </summary>
         private readonly long[] bucketCounts;
 
         public HistogramMetric(string name, string description, double[] buckets, string[] preformattedBuckets, string preformattedSum, string preformattedCount)
         {
-            this.Name = name;
-            this.Description = description;
-            this.PreformattedBuckets = preformattedBuckets;
-            this.PreformattedSum = preformattedSum;
-            this.PreformattedCount = preformattedCount;
-            this.bucketUpperBounds = buckets;
-            this.bucketCounts = new long[buckets.Length];
+            Name = name;
+            Description = description;
+            PreformattedBuckets = preformattedBuckets;
+            PreformattedSum = preformattedSum;
+            PreformattedCount = preformattedCount;
+            bucketUpperBounds = buckets;
+            bucketCounts = new long[buckets.Length];
         }
 
         /// <inheritDoc/>
         public void Report(double value)
         {
-            // Currently we accept there are race conditions here, we could get around it with a lock but frankly it's probably ok
+            // Currently we accept there are race conditions here, we could get around it with a lock, but frankly it's probably ok
             // until proven otherwise
             InterlockedDouble.Add(ref sum, value);
 
-            for (int i = 0; i < bucketUpperBounds.Length; i++)
+            for (var i = 0; i < bucketUpperBounds.Length; i++)
             {
                 if (value < bucketUpperBounds[i])
+                {
                     Interlocked.Increment(ref bucketCounts[i]);
+                }
             }
         }
 

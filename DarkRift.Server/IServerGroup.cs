@@ -19,7 +19,7 @@ namespace DarkRift.Server
         /// <param name="id">The ID of the server.</param>
         /// <returns>The server with that ID.</returns>
         IRemoteServer this[ushort id] { get; }
-        
+
         /// <summary>
         ///     Event fired when a server joins.
         /// </summary>

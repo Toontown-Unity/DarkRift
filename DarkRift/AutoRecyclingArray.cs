@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace DarkRift
@@ -18,7 +13,7 @@ namespace DarkRift
     /// </summary>
     /// <threadsafety static="true" instance="false"/>
     // TODO tie ARA in 1-1 relationship with memory so we can count finalizes and can't accidently mess up references
-    internal class AutoRecyclingArray
+    public class AutoRecyclingArray
     {
         /// <summary>
         ///     The current backing array.
@@ -43,7 +38,7 @@ namespace DarkRift
         // TODO DR3 use Caller Information Attributes to improve debugging
         internal static AutoRecyclingArray Create(int minLength)
         {
-            AutoRecyclingArray array = ObjectCache.GetAutoRecyclingArray();
+            var array = ObjectCache.GetAutoRecyclingArray();
 
             array.isCurrentlyLoungingInAPool = false;
             array.Buffer = ObjectCache.GetMemory(minLength);
@@ -57,7 +52,6 @@ namespace DarkRift
         /// </summary>
         internal AutoRecyclingArray()
         {
-
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace DarkRift
                 throw new InvalidOperationException();
 #endif
 
-            int newRefCount = Interlocked.Decrement(ref referenceCount);
+            var newRefCount = Interlocked.Decrement(ref referenceCount);
 
             if (newRefCount == 0)
             {
@@ -114,7 +108,9 @@ namespace DarkRift
         ~AutoRecyclingArray()
         {
             if (!isCurrentlyLoungingInAPool)
+            {
                 ObjectCacheHelper.AutoRecyclingArrayWasFinalized();
+            }
         }
     }
 }

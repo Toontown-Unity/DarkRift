@@ -85,7 +85,6 @@ namespace DarkRift.Server
                 /// </summary>
                 public GroupSettings()
                 {
-
                 }
 
                 /// <summary>
@@ -95,8 +94,8 @@ namespace DarkRift.Server
                 /// <param name="visibility">The group's visibility.</param>
                 public GroupSettings(string name, ServerVisibility visibility)
                 {
-                    this.Name = name;
-                    this.Visibility = visibility;
+                    Name = name;
+                    Visibility = visibility;
                 }
 
                 /// <summary>
@@ -119,8 +118,9 @@ namespace DarkRift.Server
                     helper.ReadElementCollectionTo(
                         element,
                         "connectsTo",
-                        e => {
-                            ConnectsToSettings s = new ConnectsToSettings();
+                        e =>
+                        {
+                            var s = new ConnectsToSettings();
                             s.LoadFromXmlElement(e, helper);
                             return s;
                         },
@@ -139,8 +139,9 @@ namespace DarkRift.Server
                 helper.ReadElementCollectionTo(
                     element,
                     "group",
-                    e => {
-                        GroupSettings s = new GroupSettings();
+                    e =>
+                    {
+                        var s = new GroupSettings();
                         s.LoadFromXmlElement(e, helper);
                         return s;
                     },
@@ -179,11 +180,11 @@ namespace DarkRift.Server
         public static ClusterSpawnData CreateFromXml(XDocument document, NameValueCollection variables)
         {
             //Create a new cluster spawn data.
-            ClusterSpawnData spawnData = new ClusterSpawnData();
+            var spawnData = new ClusterSpawnData();
 
-            ConfigurationFileHelper helper = new ConfigurationFileHelper(variables, $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}configuration/cluster/", $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}advanced/configuration_variables.html");
+            var helper = new ConfigurationFileHelper(variables, $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}configuration/cluster/", $"{new DarkRiftInfo(DateTime.Now).DocumentationRoot}advanced/configuration_variables.html");
 
-            XElement root = document.Root;
+            var root = document.Root;
 
             spawnData.Groups.LoadFromXmlElement(root.Element("groups"), helper);
 

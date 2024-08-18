@@ -4,9 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using DarkRift.Server.Metrics;
 using System;
 using System.Collections.Generic;
-using DarkRift.Server.Metrics;
 
 namespace DarkRift.Server
 {
@@ -39,7 +39,7 @@ namespace DarkRift.Server
         ///     Creates a new downstream connected server group
         /// </summary>
         /// <param name="name">The name of the group.</param>
-        /// <param name="visibility">The groups visibility.</param>
+        /// <param name="visibility">The groups' visibility.</param>
         /// <param name="threadHelper">The server's thread helper.</param>
         /// <param name="logger">The logger to use.</param>
         /// <param name="remoteServerLogger">The logger to pass to created remote servers.</param>
@@ -57,7 +57,7 @@ namespace DarkRift.Server
         /// <inheritdoc />
         public override void HandleServerJoin(ushort id, string host, ushort port, IDictionary<string, string> properties)
         {
-            DownstreamRemoteServer remoteServer = new DownstreamRemoteServer(id, host, port, this, threadHelper, remoteServerLogger, remoteServerMetricsCollector);
+            var remoteServer = new DownstreamRemoteServer(id, host, port, this, threadHelper, remoteServerLogger, remoteServerMetricsCollector);
 
             AddServer(remoteServer);
 
@@ -67,7 +67,7 @@ namespace DarkRift.Server
         /// <inheritdoc />
         public override void HandleServerLeave(ushort id)
         {
-            DownstreamRemoteServer remoteServer = RemoveServer(id);
+            var remoteServer = RemoveServer(id);
 
             HandleServerLeaveEvent(id, remoteServer);
         }

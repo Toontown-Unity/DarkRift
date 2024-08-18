@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -19,16 +16,22 @@ namespace DarkRift.Server
         /// <summary>
         ///     Creates a new syntax error.
         /// </summary>
-        public CommandSyntaxException() : base() { }
+        public CommandSyntaxException() : base()
+        {
+        }
 
         /// <summary>
         ///     Creates a new syntax error with a given message.
         /// </summary>
-        public CommandSyntaxException(string message) : base(message) { }
+        public CommandSyntaxException(string message) : base(message)
+        {
+        }
 
         /// <summary>
         ///     Creates a new syntax error with a given message and inner exception.
         /// </summary>
-        public CommandSyntaxException(string message, Exception innerException) : base(message, innerException) { }
+        public CommandSyntaxException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

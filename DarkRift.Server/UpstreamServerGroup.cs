@@ -4,12 +4,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using DarkRift.Client;
+using DarkRift.Server.Metrics;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
-using DarkRift.Server.Metrics;
 
 namespace DarkRift.Server
 {
@@ -57,16 +56,17 @@ namespace DarkRift.Server
         ///     Creates a new upstream connected server group
         /// </summary>
         /// <param name="name">The name of the group.</param>
-        /// <param name="visibility">The groups visibility.</param>
+        /// <param name="visibility">The groups' visibility.</param>
         /// <param name="threadHelper">The server's thread helper.</param>
         /// <param name="serverRegistryConnectorManager">The server's registry connector manager</param>
         /// <param name="remoteServerManager">The remote server manager for the server.</param>
-        /// <param name="reconnectAttempts">The number of times to attempt to reconnect to a server before considering it unconnectable.</param>
+        /// <param name="reconnectAttempts">The number of times to attempt to reconnect to a server before considering it unreachable.</param>
         /// <param name="logger">The logger to use.</param>
         /// <param name="remoteServerLogger">The logger to pass to created remote servers.</param>
         /// <param name="metricsCollector">The metrics collector to use.</param>
         /// <param name="remoteServerMetricsCollector">The metrics collector to pass to created remote servers.</param>
-        internal UpstreamServerGroup(string name, ServerVisibility visibility, DarkRiftThreadHelper threadHelper, ServerRegistryConnectorManager serverRegistryConnectorManager, RemoteServerManager remoteServerManager, int reconnectAttempts, Logger logger, Logger remoteServerLogger, MetricsCollector metricsCollector, MetricsCollector remoteServerMetricsCollector)
+        internal UpstreamServerGroup(string name, ServerVisibility visibility, DarkRiftThreadHelper threadHelper, ServerRegistryConnectorManager serverRegistryConnectorManager, RemoteServerManager remoteServerManager, int reconnectAttempts,
+            Logger logger, Logger remoteServerLogger, MetricsCollector metricsCollector, MetricsCollector remoteServerMetricsCollector)
             : base(name, visibility, threadHelper, logger, metricsCollector)
         {
             this.threadHelper = threadHelper;
@@ -81,7 +81,7 @@ namespace DarkRift.Server
         /// <inheritdoc />
         public override void HandleServerJoin(ushort id, string host, ushort port, IDictionary<string, string> properties)
         {
-            UpstreamRemoteServer remoteServer = new UpstreamRemoteServer(remoteServerManager, id, host, port, this, threadHelper, remoteServerLogger, remoteServerMetricsCollector);
+            var remoteServer = new UpstreamRemoteServer(remoteServerManager, id, host, port, this, threadHelper, remoteServerLogger, remoteServerMetricsCollector);
 
             AddServer(remoteServer);
 
@@ -110,7 +110,7 @@ namespace DarkRift.Server
         /// <inheritdoc />
         public override void HandleServerLeave(ushort id)
         {
-            UpstreamRemoteServer remoteServer = RemoveServer(id);
+            var remoteServer = RemoveServer(id);
 
             HandleServerLeaveEvent(id, remoteServer);
         }

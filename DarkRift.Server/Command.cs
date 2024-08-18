@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -47,12 +44,12 @@ namespace DarkRift.Server
         /// <param name="description">The description of the command for the command manual.</param>
         /// <param name="usage">How the command should be invoked for the command manual.</param>
         /// <param name="handler">The event handler that should be used if the command is invoked.</param>
-        public Command (string name, string description, string usage, EventHandler<CommandEventArgs> handler)
+        public Command(string name, string description, string usage, EventHandler<CommandEventArgs> handler)
         {
-            this.Name = name;
-            this.Description = description;
-            this.Usage = usage;
-            this.Handler = handler;
+            Name = name;
+            Description = description;
+            Usage = usage;
+            Handler = handler;
         }
     }
 }

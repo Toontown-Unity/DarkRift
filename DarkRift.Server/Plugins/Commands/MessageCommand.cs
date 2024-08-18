@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -34,9 +33,11 @@ namespace DarkRift.Server.Plugins.Commands
         private void CommandHandler(object sender, CommandEventArgs e)
         {
             if (e.Arguments.Length < 3)
+            {
                 throw new CommandSyntaxException($"Expected 3 arguments but found {e.Arguments.Length}.");
+            }
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            using (var writer = DarkRiftWriter.Create())
             {
                 ushort clientID;
                 try
@@ -75,21 +76,24 @@ namespace DarkRift.Server.Plugins.Commands
                     throw new CommandSyntaxException($"Unable to parse the tag. Expected a number but got '{e.Arguments[2]}'.");
                 }
 
-                try {
-                    IEnumerable<byte> bytes =
+                try
+                {
+                    var bytes =
                         e.Arguments
                             .Skip(3)
                             .Select((a) => byte.Parse(a));
 
-                    foreach (byte b in bytes)
+                    foreach (var b in bytes)
+                    {
                         writer.Write(b);
+                    }
                 }
                 catch (FormatException)
                 {
                     throw new CommandSyntaxException("An argument was unable to be parsed to a number.");
                 }
 
-                using (Message message = Message.Create(tag, writer))
+                using (var message = Message.Create(tag, writer))
                 {
                     try
                     {

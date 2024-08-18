@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -66,13 +65,13 @@ namespace DarkRift.Server.Plugins.Commands
                         return;
                     }
 
-                    Logger.Info(commands.Count() == 0 ? "This plugin has no commands." : ("Available commands: " + string.Join(", ", commands.Select(c => c.Name).ToArray())));
+                    Logger.Info(commands.Count() == 0 ? "This plugin has no commands." : "Available commands: " + string.Join(", ", commands.Select(c => c.Name).ToArray()));
                 }
                 else
                 {
-                    IEnumerable<Command> commands = Server.CommandEngine.GetCommands();
+                    var commands = Server.CommandEngine.GetCommands();
 
-                    Logger.Info(commands.Count() == 0 ? "This server has no commands." : ("Available commands: " + string.Join(", ", commands.Select(c => c.Name).ToArray())));
+                    Logger.Info(commands.Count() == 0 ? "This server has no commands." : "Available commands: " + string.Join(", ", commands.Select(c => c.Name).ToArray()));
                 }
             }
             else

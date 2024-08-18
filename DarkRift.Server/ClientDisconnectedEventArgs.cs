@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
 
@@ -22,18 +20,6 @@ namespace DarkRift.Server
         ///     The Client of the new client.
         /// </summary>
         public IClient Client { get; private set; }
-
-        /// <summary>
-        ///     The remote end point of the TCP connection to this client.
-        /// </summary>
-        [Obsolete("Use GetRemoteEndpoint(\"TCP\") instead")]
-        public IPEndPoint RemoteTcpEndPoint => Client.GetRemoteEndPoint("tcp");
-
-        /// <summary>
-        ///     The remote end point of the UDP connection to this client.
-        /// </summary>
-        [Obsolete("Use GetRemoteEndpoint(\"UDP\") instead")]
-        public IPEndPoint RemoteUdpEndPoint => Client.GetRemoteEndPoint("udp");
 
         /// <summary>
         ///     The collection of end points this client is connected to.
@@ -73,13 +59,13 @@ namespace DarkRift.Server
         /// <param name="clientConnection">The ClientConnection of the client.</param>
         /// <param name="localDisconnect">Whether it was a local call that caused the disconnection.</param>
         /// <param name="error">The error that caused the disconnect.</param>
-        /// <param name="exception">The exception that caused the disconenct.</param>
+        /// <param name="exception">The exception that caused the disconnect.</param>
         public ClientDisconnectedEventArgs(IClient clientConnection, bool localDisconnect, SocketError error, Exception exception)
         {
-            this.Client = clientConnection;
-            this.LocalDisconnect = localDisconnect;
-            this.Exception = exception;
-            this.Error = error;
+            Client = clientConnection;
+            LocalDisconnect = localDisconnect;
+            Exception = exception;
+            Error = error;
         }
 
         /// <summary>
