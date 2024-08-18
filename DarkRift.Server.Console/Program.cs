@@ -4,18 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DarkRift.Server;
-using System.Threading;
-using System.IO;
-using System.Collections.Specialized;
-using System.Collections;
 using DarkRift.Server.Configuration;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace DarkRift.Server.Console
 {
@@ -32,12 +23,14 @@ namespace DarkRift.Server.Console
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
-            string[] rawArguments = CommandEngine.ParseArguments(string.Join(" ", args));
-            string[] arguments = CommandEngine.GetArguments(rawArguments);
-            NameValueCollection variables = CommandEngine.GetFlags(rawArguments);
+            var rawArguments = CommandEngine.ParseArguments(string.Join(" ", args));
+            var arguments = CommandEngine.GetArguments(rawArguments);
+            var variables = CommandEngine.GetFlags(rawArguments);
 
             foreach (DictionaryEntry environmentVariable in Environment.GetEnvironmentVariables())
+            {
                 variables.Add((string)environmentVariable.Key, (string)environmentVariable.Value);
+            }
 
             string serverConfigFile;
             string clusterConfigFile;
@@ -146,7 +139,7 @@ namespace DarkRift.Server.Console
         {
             while (!server.Disposed)
             {
-                string input = System.Console.ReadLine();
+                var input = System.Console.ReadLine();
 
                 if (input == null)
                 {

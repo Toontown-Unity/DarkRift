@@ -4,15 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift
 {
     /// <summary>
-    ///     DEscribes the serialization in progress.
+    ///     Describes the serialization in progress.
     /// </summary>
     public class SerializeEvent
     {

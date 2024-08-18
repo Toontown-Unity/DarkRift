@@ -30,34 +30,12 @@ namespace DarkRift.Server
         public string DocumentationRoot => $"https://www.darkriftnetworking.com/DarkRift2/Docs/{Version.ToString(3)}/";
 
         /// <summary>
-        ///     The type of server running.
-        /// </summary>
-        [Obsolete("Server is always pro now")]
-        public ServerType Type => ServerType.Pro;
-
-        /// <summary>
-        ///     The type of server.
-        /// </summary>
-        public enum ServerType
-        {
-            /// <summary>
-            ///     Indicates the server is the free version.
-            /// </summary>
-            Free,
-
-            /// <summary>
-            ///     Indicates the server is paid for. Yay!
-            /// </summary>
-            Pro
-        }
-
-        /// <summary>
         ///     Creates a new DarkRiftInfo object.
         /// </summary>
         /// <param name="startTime">The time the server was started</param>
         public DarkRiftInfo(DateTime startTime)
         {
-            this.StartTime = startTime;
+            StartTime = startTime;
         }
     }
 }

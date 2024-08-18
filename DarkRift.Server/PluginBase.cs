@@ -30,21 +30,15 @@ namespace DarkRift.Server
         internal virtual bool Hidden { get; }
 
         /// <summary>
-        ///     The database manager for the server.
-        /// </summary>
-        [Obsolete("Use plugin configuration settings.")]
-        public IDatabaseManager DatabaseManager { get; }
-
-        /// <summary>
         ///     The dispatcher for this server.
         /// </summary>
         public IDispatcher Dispatcher { get; }
-        
+
         /// <summary>
         ///     Information about this server.
         /// </summary>
         public DarkRiftInfo ServerInfo { get; }
-        
+
         /// <summary>
         ///     The thread helper for the server.
         /// </summary>
@@ -72,16 +66,13 @@ namespace DarkRift.Server
         /// <param name="pluginLoadData"></param>
         public PluginBase(PluginBaseLoadData pluginLoadData)
         {
-            this.Name = pluginLoadData.Name;
-#pragma warning disable CS0618 // Type or member is obsolete
-            this.DatabaseManager = pluginLoadData.DatabaseManager;
-#pragma warning restore CS0618 // Type or member is obsolete
-            this.Dispatcher = pluginLoadData.Dispatcher;
-            this.ServerInfo = pluginLoadData.ServerInfo;
-            this.ThreadHelper = pluginLoadData.ThreadHelper;
-            this.LogManager = pluginLoadData.LogManager;
-            this.Logger = pluginLoadData.Logger;
-            this.Server = pluginLoadData.Server;
+            Name = pluginLoadData.Name;
+            Dispatcher = pluginLoadData.Dispatcher;
+            ServerInfo = pluginLoadData.ServerInfo;
+            ThreadHelper = pluginLoadData.ThreadHelper;
+            LogManager = pluginLoadData.LogManager;
+            Logger = pluginLoadData.Logger;
+            Server = pluginLoadData.Server;
         }
 
         /// <summary>
@@ -108,6 +99,7 @@ namespace DarkRift.Server
         }
 
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         /// <summary>
@@ -120,7 +112,6 @@ namespace DarkRift.Server
             {
                 if (disposing)
                 {
-                    
                 }
 
                 disposedValue = true;
@@ -134,6 +125,7 @@ namespace DarkRift.Server
         {
             Dispose(true);
         }
+
         #endregion
     }
 }

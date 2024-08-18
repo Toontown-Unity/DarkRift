@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace DarkRift.Server.Metrics
@@ -27,8 +26,8 @@ namespace DarkRift.Server.Metrics
 
         internal MetricsCollector(string prefix, MetricsWriter writer)
         {
-            this.Prefix = prefix;
-            this.Writer = writer;
+            Prefix = prefix;
+            Writer = writer;
         }
 
         /// <summary>
@@ -41,9 +40,13 @@ namespace DarkRift.Server.Metrics
         {
             ValidateName(name);
             if (Writer != null)
+            {
                 return Writer.CreateCounter(this, name, description);
+            }
             else
+            {
                 return new NoOpCounterMetric();
+            }
         }
 
         /// <summary>
@@ -58,9 +61,13 @@ namespace DarkRift.Server.Metrics
             ValidateName(name);
             ValidateTags(tags);
             if (Writer != null)
+            {
                 return Writer.CreateCounter(this, name, description, tags);
+            }
             else
+            {
                 return new TaggedMetricBuilder<ICounterMetric>(tags.Length, tagValues => new NoOpCounterMetric());
+            }
         }
 
         /// <summary>
@@ -73,9 +80,13 @@ namespace DarkRift.Server.Metrics
         {
             ValidateName(name);
             if (Writer != null)
+            {
                 return Writer.CreateGauge(this, name, description);
+            }
             else
+            {
                 return new NoOpGaugeMetric();
+            }
         }
 
         /// <summary>
@@ -90,9 +101,13 @@ namespace DarkRift.Server.Metrics
             ValidateName(name);
             ValidateTags(tags);
             if (Writer != null)
+            {
                 return Writer.CreateGauge(this, name, description, tags);
+            }
             else
+            {
                 return new TaggedMetricBuilder<IGaugeMetric>(tags.Length, tagValues => new NoOpGaugeMetric());
+            }
         }
 
         /// <summary>
@@ -105,9 +120,13 @@ namespace DarkRift.Server.Metrics
         {
             ValidateName(name);
             if (Writer != null)
+            {
                 return Writer.CreateHistogram(this, name, description);
+            }
             else
+            {
                 return new NoOpHistogramMetric();
+            }
         }
 
         /// <summary>
@@ -122,9 +141,13 @@ namespace DarkRift.Server.Metrics
             ValidateName(name);
             ValidateTags(tags);
             if (Writer != null)
+            {
                 return Writer.CreateHistogram(this, name, description, tags);
+            }
             else
+            {
                 return new TaggedMetricBuilder<IHistogramMetric>(tags.Length, tagValues => new NoOpHistogramMetric());
+            }
         }
 
         /// <summary>
@@ -134,10 +157,14 @@ namespace DarkRift.Server.Metrics
         private static void ValidateName(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name", "Name must not be null. Metric names cannot be null and must be in snake case format: 'metric_name_here'.");
+            {
+                throw new ArgumentNullException(nameof(name), "Name must not be null. Metric names cannot be null and must be in snake case format: 'metric_name_here'.");
+            }
 
             if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]*$"))
+            {
                 throw new ArgumentException($@"Name '{name}' must be in snake case and match regex '[a-zA-Z_][a-zA-Z0-9_]*'. For example: 'metric_name_here'. ");
+            }
         }
 
         /// <summary>
@@ -147,12 +174,16 @@ namespace DarkRift.Server.Metrics
         private static void ValidateTags(string[] tags)
         {
             if (tags == null)
-                throw new ArgumentNullException("tags", "Tags must not be null, use an empty array instead.");
+            {
+                throw new ArgumentNullException(nameof(tags), "Tags must not be null, use an empty array instead.");
+            }
 
-            foreach (string tag in tags)
+            foreach (var tag in tags)
             {
                 if (!Regex.IsMatch(tag, @"^[a-zA-Z_][a-zA-Z0-9_]*$"))
+                {
                     throw new ArgumentException($@"Tag '{tag}' must match regex '^[a-zA-Z_][a-zA-Z0-9_]*'. For example: 'tag_name_here'.");
+                }
             }
         }
     }

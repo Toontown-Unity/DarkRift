@@ -5,10 +5,7 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DarkRift.Client
 {
@@ -55,9 +52,9 @@ namespace DarkRift.Client
         /// <param name="exception">The exception that caused the disconnect.</param>
         internal DisconnectedEventArgs(bool localDisconnect, SocketError error, Exception exception)
         {
-            this.LocalDisconnect = localDisconnect;
-            this.Error = error;
-            this.Exception = exception;
+            LocalDisconnect = localDisconnect;
+            Error = error;
+            Exception = exception;
         }
     }
 }

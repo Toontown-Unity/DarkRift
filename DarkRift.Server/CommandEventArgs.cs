@@ -5,10 +5,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -31,7 +29,7 @@ namespace DarkRift.Server
         ///     The arguments the command was called with.
         /// </summary>
         public string[] RawArguments { get; }
-        
+
         /// <summary>
         ///     The arguments passed with the command that weren't flags.
         /// </summary>
@@ -52,13 +50,13 @@ namespace DarkRift.Server
         /// <param name="flags">The flags that were passed with the command.</param>
         internal CommandEventArgs(Command command, string originalCommand, string[] rawArguments, string[] arguments, NameValueCollection flags)
         {
-            this.Command = command;
-            this.OriginalCommand = originalCommand;
-            this.RawArguments = rawArguments;
-            this.Arguments = arguments;
-            this.Flags = flags;
+            Command = command;
+            OriginalCommand = originalCommand;
+            RawArguments = rawArguments;
+            Arguments = arguments;
+            Flags = flags;
         }
-        
+
         /// <summary>
         ///     Returns whether the arguments contain the specified flag.
         /// </summary>

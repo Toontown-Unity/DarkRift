@@ -5,10 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -16,7 +12,7 @@ namespace DarkRift.Server
     ///     Base plugin manager for plugin managers handling <see cref="ExtendedPluginBase"/> types.
     /// </summary>
     /// <typeparam name="T">The type of plugin being managed.</typeparam>
-    internal abstract class ExtendedPluginManagerBase<T> : PluginManagerBase<T>  where T : ExtendedPluginBase
+    internal abstract class ExtendedPluginManagerBase<T> : PluginManagerBase<T> where T : ExtendedPluginBase
     {
         /// <summary>
         ///     The server that owns this plugin manager.
@@ -24,7 +20,7 @@ namespace DarkRift.Server
         private readonly DarkRiftServer server;
 
         /// <summary>
-        ///     The server's datamanager.
+        ///     The server's data manager.
         /// </summary>
         private readonly DataManager dataManager;
 
@@ -37,7 +33,7 @@ namespace DarkRift.Server
         ///     Creates a new ExtendedPluginManagerBase.
         /// </summary>
         /// <param name="server">The server that owns this plugin manager.</param>
-        /// <param name="dataManager">The server's datamanager.</param>
+        /// <param name="dataManager">The server's data manager.</param>
         /// <param name="pluginFactory">The server's plugin factory.</param>
         /// <param name="logger">The logger for this manager.</param>
         internal ExtendedPluginManagerBase(DarkRiftServer server, DataManager dataManager, PluginFactory pluginFactory, Logger logger)
@@ -58,7 +54,7 @@ namespace DarkRift.Server
         /// <param name="createResourceDirectory">Whether to create a resource directory or not.</param>
         protected override T LoadPlugin(string name, Type type, PluginBaseLoadData pluginLoadData, PluginLoadData backupLoadData, bool createResourceDirectory)
         {
-            T plugin = base.LoadPlugin(name, type, pluginLoadData, backupLoadData, createResourceDirectory);
+            var plugin = base.LoadPlugin(name, type, pluginLoadData, backupLoadData, createResourceDirectory);
 
             HandleThreadSafe(plugin);
 
@@ -77,7 +73,7 @@ namespace DarkRift.Server
         /// <param name="createResourceDirectory">Whether to create a resource directory or not.</param>
         protected override T LoadPlugin(string name, string type, PluginBaseLoadData pluginLoadData, PluginLoadData backupLoadData, bool createResourceDirectory)
         {
-            T plugin = base.LoadPlugin(name, type, pluginLoadData, backupLoadData, createResourceDirectory);
+            var plugin = base.LoadPlugin(name, type, pluginLoadData, backupLoadData, createResourceDirectory);
 
             HandleThreadSafe(plugin);
 
@@ -105,26 +101,32 @@ namespace DarkRift.Server
         /// <param name="plugin">The plugin to check.</param>
         private void HandleInstallUpgrade(T plugin)
         {
-            PluginRecord oldRecord = dataManager.ReadAndSetPluginRecord(plugin.Name, plugin.Version);
+            var oldRecord = dataManager.ReadAndSetPluginRecord(plugin.Name, plugin.Version);
 
             if (oldRecord == null)
             {
                 plugin.Install(new InstallEventArgs());
 
                 if (!plugin.Hidden)
+                {
                     logger.Info($"Installed plugin {plugin.Name} version {plugin.Version}");
+                }
             }
             else if (oldRecord.Version == plugin.Version)
             {
                 if (!plugin.Hidden)
+                {
                     logger.Info($"Loaded plugin {plugin.Name} version {plugin.Version}");
+                }
             }
             else
             {
                 plugin.Upgrade(new UpgradeEventArgs(oldRecord.Version));
 
                 if (!plugin.Hidden)
+                {
                     logger.Info($"Upgraded plugin {plugin.Name} version {plugin.Version} from version {oldRecord.Version}");
+                }
             }
         }
 
@@ -162,8 +164,10 @@ namespace DarkRift.Server
         /// </remarks>
         internal void Loaded()
         {
-            foreach (T plugin in GetPlugins())
+            foreach (var plugin in GetPlugins())
+            {
                 plugin.Loaded(new LoadedEventArgs());
+            }
         }
     }
 }

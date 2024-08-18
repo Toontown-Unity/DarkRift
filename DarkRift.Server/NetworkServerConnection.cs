@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -27,7 +25,7 @@ namespace DarkRift.Server
         ///     The collection of end points this connection is connected to.
         /// </summary>
         public abstract IEnumerable<IPEndPoint> RemoteEndPoints { get; }
-        
+
         /// <summary>
         ///     The action to call when a message is received.
         /// </summary>
@@ -39,10 +37,10 @@ namespace DarkRift.Server
         internal Action<SocketError, Exception> Disconnected { get; set; }
 
         /// <summary>
-        ///     Get's an end point of the remote client.
+        ///     Gets an end point of the remote client.
         /// </summary>
         public abstract IPEndPoint GetRemoteEndPoint(string name);
-        
+
         /// <summary>
         ///     The client related to this server connection.
         /// </summary>
@@ -67,16 +65,20 @@ namespace DarkRift.Server
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public virtual bool SendMessage(MessageBuffer message, SendMode sendMode)
         {
             if (sendMode == SendMode.Reliable)
+            {
                 return SendMessageReliable(message);
+            }
             else
+            {
                 return SendMessageUnreliable(message);
+            }
         }
-        
+
         /// <summary>
         ///     Begins listening for data.
         /// </summary>
@@ -90,7 +92,7 @@ namespace DarkRift.Server
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public abstract bool SendMessageReliable(MessageBuffer message);
 
@@ -102,7 +104,7 @@ namespace DarkRift.Server
         /// <remarks>
         ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
-        ///     Not doing this will result in memnory leaks.
+        ///     Not doing this will result in memory leaks.
         /// </remarks>
         public abstract bool SendMessageUnreliable(MessageBuffer message);
 
@@ -115,7 +117,7 @@ namespace DarkRift.Server
         // TODO might be good to have a Drop() method that calls Disconnect by default but is overridable if the listener wants to
 
         /*
-         * To ensure compatibility with older SocketError Disconnected event parameters we 
+         * To ensure compatibility with older SocketError Disconnected event parameters we
          * need to provide SocketErrors where possible which can make this a pain in the neck.
          */
 
@@ -135,9 +137,13 @@ namespace DarkRift.Server
         {
             //Not all socket errors make sense to have an exception really
             if (error == SocketError.Success || error == SocketError.Disconnecting)
+            {
                 Disconnected?.Invoke(error, null);
+            }
             else
+            {
                 Disconnected?.Invoke(error, new SocketException((int)error));
+            }
         }
 
         /// <summary>
@@ -148,9 +154,13 @@ namespace DarkRift.Server
         {
             //Make sure socket exceptions expose socket error code
             if (exception is SocketException)
+            {
                 Disconnected?.Invoke(((SocketException)exception).SocketErrorCode, exception);
+            }
             else
+            {
                 Disconnected?.Invoke(SocketError.SocketError, exception);
+            }
         }
 
         /// <summary>
@@ -161,10 +171,13 @@ namespace DarkRift.Server
         protected void Strike(string message = null, int weight = 1)
         {
             if (Client != null)
+            {
                 Client.Strike(StrikeReason.ConnectionRequest, message, weight);
+            }
         }
-        
+
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         /// <summary>
@@ -177,9 +190,8 @@ namespace DarkRift.Server
             {
                 if (disposing)
                 {
-                    
                 }
-                
+
                 disposedValue = true;
             }
         }
@@ -191,6 +203,7 @@ namespace DarkRift.Server
         {
             Dispose(true);
         }
+
         #endregion
     }
 }

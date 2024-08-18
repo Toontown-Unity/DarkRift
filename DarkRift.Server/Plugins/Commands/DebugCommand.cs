@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -39,11 +38,18 @@ namespace DarkRift.Server.Plugins.Commands
                 {
                     case "events-from-dispatcher":
                         if (e.Flags[property] == "true")
+                        {
                             ThreadHelper.EventsFromDispatcher = true;
+                        }
                         else if (e.Flags[property] == "false")
+                        {
                             ThreadHelper.EventsFromDispatcher = false;
+                        }
                         else
+                        {
                             throw new CommandSyntaxException("Cannot set events-from-dispatcher to anything but 'true' or 'false'.");
+                        }
+
                         break;
 
                     default:
@@ -51,9 +57,13 @@ namespace DarkRift.Server.Plugins.Commands
                 }
 
                 if (e.Flags[property] != null)
+                {
                     Logger.Info(property + " set to " + e.Flags[property] + ".");
+                }
                 else
+                {
                     Logger.Info(property + " set.");
+                }
             }
         }
 
@@ -75,11 +85,11 @@ namespace DarkRift.Server.Plugins.Commands
 
         private void DebugLatency(object sender, CommandEventArgs e)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("| Client | EndPoint             | Latest RTT       | Latest Smoothed  |");
             builder.AppendLine("|--------|----------------------|------------------|------------------|");
 
-            foreach (IClient client in ClientManager.GetAllClients())
+            foreach (var client in ClientManager.GetAllClients())
             {
                 builder.Append("| ");
                 builder.Append(client.ID.ToString().PadRight(6));
@@ -102,17 +112,6 @@ namespace DarkRift.Server.Plugins.Commands
             Logger.Warning("This is a test message at Warning level.", new Exception("This is a test exception at Warning level."));
             Logger.Error("This is a test message at Error level.", new Exception("This is a test exception at Error level."));
             Logger.Fatal("This is a test message at Fatal level.", new Exception("This is a test exception at Fatal level."));
-
-            if (e.HasFlag("l"))
-            {
-#pragma warning disable CS0618 // Type or member is obsolete
-                WriteEvent("This is a test message at Trace level.", LogType.Trace, new Exception("This is a test exception at Trace level."));
-                WriteEvent("This is a test message at Info level.", LogType.Info, new Exception("This is a test exception at Info level."));
-                WriteEvent("This is a test message at Warning level.", LogType.Warning, new Exception("This is a test exception at Warning level."));
-                WriteEvent("This is a test message at Error level.", LogType.Error, new Exception("This is a test exception at Error level."));
-                WriteEvent("This is a test message at Fatal level.", LogType.Fatal, new Exception("This is a test exception at Fatal level."));
-#pragma warning restore CS0618 // Type or member is obsolete
-            }
         }
     }
 }

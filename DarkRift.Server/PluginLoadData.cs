@@ -4,13 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
 using DarkRift.Server.Metrics;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -23,7 +19,7 @@ namespace DarkRift.Server
         ///     The client manager to pass to the server.
         /// </summary>
         public IClientManager ClientManager { get; set; }
-        
+
         /// <summary>
         ///     The plugin manager to pass to the plugin.
         /// </summary>
@@ -35,7 +31,7 @@ namespace DarkRift.Server
         public INetworkListenerManager NetworkListenerManager { get; set; }
 
         /// <summary>
-        ///     The server regsitry connector manager to pass to the plugin.
+        ///     The server registry connector manager to pass to the plugin.
         /// </summary>
         public IServerRegistryConnectorManager ServerRegistryConnectorManager { get; set; }
 
@@ -49,15 +45,15 @@ namespace DarkRift.Server
         /// </summary>
         public string ResourceDirectory { get; set; }
 
-        internal PluginLoadData (string name, DarkRiftServer server, NameValueCollection settings, Logger logger, MetricsCollector metricsCollector, string resourceDirectory)
+        internal PluginLoadData(string name, DarkRiftServer server, NameValueCollection settings, Logger logger, MetricsCollector metricsCollector, string resourceDirectory)
             : base(name, server, settings, logger, metricsCollector)
         {
-            this.ClientManager = server.ClientManager;
-            this.PluginManager = server.PluginManager;
-            this.NetworkListenerManager = server.NetworkListenerManager;
-            this.ServerRegistryConnectorManager = server.ServerRegistryConnectorManager;
-            this.RemoteServerManager = server.RemoteServerManager;
-            this.ResourceDirectory = resourceDirectory;
+            ClientManager = server.ClientManager;
+            PluginManager = server.PluginManager;
+            NetworkListenerManager = server.NetworkListenerManager;
+            ServerRegistryConnectorManager = server.ServerRegistryConnectorManager;
+            RemoteServerManager = server.RemoteServerManager;
+            ResourceDirectory = resourceDirectory;
         }
 
         /// <summary>
@@ -75,23 +71,7 @@ namespace DarkRift.Server
         public PluginLoadData(string name, NameValueCollection settings, DarkRiftInfo serverInfo, DarkRiftThreadHelper threadHelper, Logger logger, string resourceDirectory)
             : base(name, settings, serverInfo, threadHelper, logger)
         {
-            this.ResourceDirectory = resourceDirectory;
-        }
-
-        /// <summary>
-        ///     Creates new load data with the given properties.
-        /// </summary>
-        /// <param name="name">The name of the plugin.</param>
-        /// <param name="settings">The settings to pass the plugin.</param>
-        /// <param name="serverInfo">The runtime details about the server.</param>
-        /// <param name="threadHelper">The server's thread helper.</param>
-        /// <param name="writeEventHandler"><see cref="WriteEventHandler"/> for logging.</param>
-        /// <param name="resourceDirectory">The directory to place this plugin's resources.</param>
-        [Obsolete("Use the constructor accepting Logger instead. This is kept for plugins using the legacy WriteEvent methods only.")]
-        public PluginLoadData(string name, NameValueCollection settings, DarkRiftInfo serverInfo, DarkRiftThreadHelper threadHelper, WriteEventHandler writeEventHandler, string resourceDirectory)
-            : base(name, settings, serverInfo, threadHelper, writeEventHandler)
-        {
-            this.ResourceDirectory = resourceDirectory;
+            ResourceDirectory = resourceDirectory;
         }
     }
 }

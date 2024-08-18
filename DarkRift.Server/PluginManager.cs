@@ -4,16 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
-using System.Data.Common;
-using System.Collections.Specialized;
-using System.Threading;
 using DarkRift.Server.Metrics;
+using System;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace DarkRift.Server
 {
@@ -28,7 +22,7 @@ namespace DarkRift.Server
         private readonly DarkRiftServer server;
 
         /// <summary>
-        ///     The server's datamanager.
+        ///     The server's data manager.
         /// </summary>
         private readonly DataManager dataManager;
 
@@ -51,13 +45,13 @@ namespace DarkRift.Server
         ///     Creates a new PluginManager.
         /// </summary>
         /// <param name="server">The server that owns this plugin manager.</param>
-        /// <param name="dataManager">The server's datamanager.</param>
+        /// <param name="dataManager">The server's data manager.</param>
         /// <param name="logManager">The server's log manager.</param>
         /// <param name="pluginFactory">The server's plugin factory.</param>
         /// <param name="logger">The logger for this manager.</param>
         /// <param name="metricsManager">The server's metrics manager.</param>
         internal PluginManager(DarkRiftServer server, DataManager dataManager, LogManager logManager, MetricsManager metricsManager, PluginFactory pluginFactory, Logger logger)
-            : base (server, dataManager, pluginFactory, logger)
+            : base(server, dataManager, pluginFactory, logger)
         {
             this.server = server;
             this.dataManager = dataManager;
@@ -72,15 +66,15 @@ namespace DarkRift.Server
         /// <param name="settings">The settings to load plugins with.</param>
         internal void LoadPlugins(ServerSpawnData.PluginsSettings settings)
         {
-            Type[] types = pluginFactory.GetAllSubtypes(typeof(Plugin));
-            
-            foreach (Type type in types)
+            var types = pluginFactory.GetAllSubtypes(typeof(Plugin));
+
+            foreach (var type in types)
             {
                 var s = settings.Plugins.FirstOrDefault(p => p.Type == type.Name);
 
-                PluginLoadData loadData = new PluginLoadData(
-                    type.Name, 
-                    server, 
+                var loadData = new PluginLoadData(
+                    type.Name,
+                    server,
                     s?.Settings ?? new NameValueCollection(),
                     logManager.GetLoggerFor(type.Name),
                     metricsManager.GetMetricsCollectorFor(type.Name),
@@ -88,7 +82,9 @@ namespace DarkRift.Server
                 );
 
                 if (s?.Load ?? settings.LoadByDefault)
+                {
                     LoadPlugin(type.Name, type, loadData, null, true);
+                }
             }
         }
 

@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace DarkRift
 {
     /// <summary>
@@ -25,7 +20,7 @@ namespace DarkRift
         Unreliable,
 
         /// <summary>
-        ///     Sends the message and ensures it will arive at it's destination.
+        ///     Sends the message and ensures it will arrive at its destination.
         /// </summary>
         /// <remarks>
         ///     THis will also fragment large messages unlike Unreliable.

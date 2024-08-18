@@ -7,15 +7,13 @@
 using DarkRift.Server.Metrics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace DarkRift.Server.Plugins.Listeners.Bichannel
 {
     /// <summary>
-    ///     A connection to a remote cliente and handles TCP and UDP channels.
+    ///     A connection to a remote client and handles TCP and UDP channels.
     /// </summary>
     internal sealed class BichannelServerConnection : NetworkServerConnection
     {
@@ -38,11 +36,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         ///     The end point of the remote client on UDP.
         /// </summary>
         public IPEndPoint RemoteUdpEndPoint { get; }
-        
+
         /// <summary>
-        ///     Whether Nagel's algorithm should be disabled or not.
+        ///     Whether Nagle's algorithm should be disabled or not.
         /// </summary>
-        public bool NoDelay {
+        public bool NoDelay
+        {
             get => tcpSocket.NoDelay;
             set => tcpSocket.NoDelay = value;
         }
@@ -94,35 +93,37 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             this.tcpSocket = tcpSocket;
             this.networkListener = networkListener;
-            this.RemoteTcpEndPoint = (IPEndPoint)tcpSocket.RemoteEndPoint;
-            this.RemoteUdpEndPoint = udpEndPoint;
-            this.AuthToken = authToken;
+            RemoteTcpEndPoint = (IPEndPoint)tcpSocket.RemoteEndPoint;
+            RemoteUdpEndPoint = udpEndPoint;
+            AuthToken = authToken;
 
             //Mark connected to allow sending
             CanSend = true;
 
-            TaggedMetricBuilder<ICounterMetric> bytesSentCounter = metricsCollector.Counter("bytes_sent", "The number of bytes sent to clients by the listener.", "protocol");
-            TaggedMetricBuilder<ICounterMetric> bytesReceivedCounter = metricsCollector.Counter("bytes_received", "The number of bytes received from clients by the listener.", "protocol");
+            var bytesSentCounter = metricsCollector.Counter("bytes_sent", "The number of bytes sent to clients by the listener.", "protocol");
+            var bytesReceivedCounter = metricsCollector.Counter("bytes_received", "The number of bytes received from clients by the listener.", "protocol");
             bytesSentCounterTcp = bytesSentCounter.WithTags("tcp");
             bytesSentCounterUdp = bytesSentCounter.WithTags("udp");
             bytesReceivedCounterTcp = bytesReceivedCounter.WithTags("tcp");
             bytesReceivedCounterUdp = bytesReceivedCounter.WithTags("udp");
         }
-        
+
         /// <summary>
         ///     Begins listening for data.
         /// </summary>
         public override void StartListening()
         {
-            //Setup the TCP socket to receive a header
-            SocketAsyncEventArgs tcpArgs = ObjectCache.GetSocketAsyncEventArgs();
+            //Set up the TCP socket to receive a header
+            var tcpArgs = ObjectCache.GetSocketAsyncEventArgs();
             tcpArgs.BufferList = null;
 
             SetupReceiveHeader(tcpArgs);
             // TODO can throw an object disposed exception here if we connect and disconnect very quickly
-            bool headerCompletingAsync = tcpSocket.ReceiveAsync(tcpArgs);
+            var headerCompletingAsync = tcpSocket.ReceiveAsync(tcpArgs);
             if (!headerCompletingAsync)
+            {
                 AsyncReceiveHeaderCompleted(this, tcpArgs);
+            }
 
             //Register for UDP Messages
             networkListener.RegisterUdpConnection(this);
@@ -140,13 +141,13 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 return false;
             }
 
-            byte[] header = new byte[4];        // TODO pool!
+            var header = new byte[4]; // TODO pool!
             BigEndianHelper.WriteBytes(header, 0, message.Count);
 
-            SocketAsyncEventArgs args = ObjectCache.GetSocketAsyncEventArgs();
+            var args = ObjectCache.GetSocketAsyncEventArgs();
 
             args.SetBuffer(null, 0, 0);
-            args.BufferList = new List<ArraySegment<byte>>()    // TODO pooollllllll!
+            args.BufferList = new List<ArraySegment<byte>>() // TODO pooollllllll!
             {
                 new ArraySegment<byte>(header),
                 new ArraySegment<byte>(message.Buffer, message.Offset, message.Count)
@@ -170,7 +171,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
 
             if (!completingAsync)
+            {
                 TcpSendCompleted(this, args);
+            }
 
             return true;
         }
@@ -183,7 +186,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 message.Dispose();
                 return false;
             }
-            
+
             return networkListener.SendUdpBuffer(RemoteUdpEndPoint, message, UdpSendCompleted);
         }
 
@@ -194,7 +197,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         public override bool Disconnect()
         {
             if (!CanSend && !IsListening)
+            {
                 return false;
+            }
 
             try
             {
@@ -221,7 +226,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             while (true)
             {
-                if (!WasHeaderReceiveSucessful(args))
+                if (!WasHeaderReceiveSuccessful(args))
                 {
                     HandleDisconnectionDuringHeaderReceive(args);
                     return;
@@ -233,9 +238,11 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
 
                     try
                     {
-                        bool headerContinueCompletingAsync = tcpSocket.ReceiveAsync(args);
+                        var headerContinueCompletingAsync = tcpSocket.ReceiveAsync(args);
                         if (headerContinueCompletingAsync)
+                        {
                             return;
+                        }
                     }
                     catch (ObjectDisposedException)
                     {
@@ -246,7 +253,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                     continue;
                 }
 
-                int bodyLength = ProcessHeader(args);
+                var bodyLength = ProcessHeader(args);
                 if (bodyLength >= networkListener.MaxTcpBodyLength)
                 {
                     Strike("TCP body length was above allowed limits.", 10);
@@ -258,9 +265,11 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 {
                     try
                     {
-                        bool bodyCompletingAsync = tcpSocket.ReceiveAsync(args);
+                        var bodyCompletingAsync = tcpSocket.ReceiveAsync(args);
                         if (bodyCompletingAsync)
+                        {
                             return;
+                        }
                     }
                     catch (ObjectDisposedException)
                     {
@@ -268,22 +277,26 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                         return;
                     }
 
-                    if (!WasBodyReceiveSucessful(args))
+                    if (!WasBodyReceiveSuccessful(args))
                     {
                         HandleDisconnectionDuringBodyReceive(args);
                         return;
                     }
 
                     if (IsBodyReceiveComplete(args))
+                    {
                         break;
+                    }
 
                     UpdateBufferPointers(args);
                 }
-                
-                MessageBuffer bodyBuffer = ProcessBody(args);
+
+                var bodyBuffer = ProcessBody(args);
 
                 if (PreserveTcpOrdering)
+                {
                     ProcessMessage(bodyBuffer);
+                }
 
                 // Start next receive before invoking events
                 SetupReceiveHeader(args);
@@ -299,10 +312,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 }
 
                 if (!PreserveTcpOrdering)
+                {
                     ProcessMessage(bodyBuffer);
+                }
 
                 if (headerCompletingAsync)
+                {
                     return;
+                }
             }
         }
 
@@ -326,22 +343,26 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             while (true)
             {
-                if (!WasBodyReceiveSucessful(args))
+                if (!WasBodyReceiveSuccessful(args))
                 {
                     HandleDisconnectionDuringBodyReceive(args);
                     return;
                 }
 
                 if (IsBodyReceiveComplete(args))
+                {
                     break;
+                }
 
                 UpdateBufferPointers(args);
 
                 try
                 {
-                    bool bodyContinueCompletingAsync = tcpSocket.ReceiveAsync(args);
+                    var bodyContinueCompletingAsync = tcpSocket.ReceiveAsync(args);
                     if (bodyContinueCompletingAsync)
+                    {
                         return;
+                    }
                 }
                 catch (ObjectDisposedException)
                 {
@@ -350,10 +371,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 }
             }
 
-            MessageBuffer bodyBuffer = ProcessBody(args);
+            var bodyBuffer = ProcessBody(args);
 
             if (PreserveTcpOrdering)
+            {
                 ProcessMessage(bodyBuffer);
+            }
 
             // Start next receive before invoking events
             SetupReceiveHeader(args);
@@ -369,10 +392,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
 
             if (!PreserveTcpOrdering)
+            {
                 ProcessMessage(bodyBuffer);
+            }
 
             if (headerCompletingAsync)
+            {
                 return;
+            }
 
             //Now move back into main loop until no more data is present
             ReceiveHeaderAndBody(args);
@@ -385,7 +412,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <returns>If the whole header has been received.</returns>
         private bool IsHeaderReceiveComplete(SocketAsyncEventArgs args)
         {
-            MessageBuffer headerBuffer = (MessageBuffer)args.UserToken;
+            var headerBuffer = (MessageBuffer)args.UserToken;
 
             return args.Offset + args.BytesTransferred - headerBuffer.Offset >= headerBuffer.Count;
         }
@@ -397,7 +424,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <returns>If the whole body has been received.</returns>
         private bool IsBodyReceiveComplete(SocketAsyncEventArgs args)
         {
-            MessageBuffer bodyBuffer = (MessageBuffer)args.UserToken;
+            var bodyBuffer = (MessageBuffer)args.UserToken;
 
             return args.Offset + args.BytesTransferred - bodyBuffer.Offset >= bodyBuffer.Count;
         }
@@ -409,9 +436,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <returns>The number of bytes in the body.</returns>
         private int ProcessHeader(SocketAsyncEventArgs args)
         {
-            MessageBuffer headerBuffer = (MessageBuffer)args.UserToken;
+            var headerBuffer = (MessageBuffer)args.UserToken;
 
-            int bodyLength = BigEndianHelper.ReadInt32(headerBuffer.Buffer, headerBuffer.Offset);
+            var bodyLength = BigEndianHelper.ReadInt32(headerBuffer.Buffer, headerBuffer.Offset);
 
             headerBuffer.Dispose();
 
@@ -433,14 +460,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         }
 
         /// <summary>
-        ///     Invokes message recevied events and cleans up.
+        ///     Invokes message received events and cleans up.
         /// </summary>
         /// <param name="buffer">The TCP body received.</param>
         private void ProcessMessage(MessageBuffer buffer)
         {
             HandleMessageReceived(buffer, SendMode.Reliable);
 
-            int bytesReceived = buffer.Count;
+            var bytesReceived = buffer.Count;
             buffer.Dispose();
 
             bytesReceivedCounterTcp.Increment(bytesReceived + 4);
@@ -450,8 +477,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         ///     Checks if a TCP header was received correctly.
         /// </summary>
         /// <param name="args">The socket args used during the operation.</param>
-        /// <returns>If the receive completed correctly.</returns>
-        private bool WasHeaderReceiveSucessful(SocketAsyncEventArgs args)
+        /// <returns>If the reception completed correctly.</returns>
+        private bool WasHeaderReceiveSuccessful(SocketAsyncEventArgs args)
         {
             return args.BytesTransferred != 0 && args.SocketError == SocketError.Success;
         }
@@ -460,8 +487,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         ///     Checks if a TCP body was received correctly.
         /// </summary>
         /// <param name="args">The socket args used during the operation.</param>
-        /// <returns>If the receive completed correctly.</returns>
-        private bool WasBodyReceiveSucessful(SocketAsyncEventArgs args)
+        /// <returns>If the reception completed correctly.</returns>
+        private bool WasBodyReceiveSuccessful(SocketAsyncEventArgs args)
         {
             return args.BytesTransferred != 0 && args.SocketError == SocketError.Success;
         }
@@ -478,7 +505,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
             finally
             {
-                MessageBuffer buffer = (MessageBuffer)args.UserToken;
+                var buffer = (MessageBuffer)args.UserToken;
                 buffer.Dispose();
 
                 args.Completed -= AsyncReceiveHeaderCompleted;
@@ -498,7 +525,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
             finally
             {
-                MessageBuffer buffer = (MessageBuffer)args.UserToken;
+                var buffer = (MessageBuffer)args.UserToken;
                 buffer.Dispose();
 
                 args.Completed -= AsyncReceiveBodyCompleted;
@@ -507,12 +534,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         }
 
         /// <summary>
-        ///     Setup a listen operation for a new TCP header.
+        ///     Set up a listen operation for a new TCP header.
         /// </summary>
         /// <param name="args">The socket args to use during the operation.</param>
         private void SetupReceiveHeader(SocketAsyncEventArgs args)
         {
-            MessageBuffer headerBuffer = MessageBuffer.Create(4);
+            var headerBuffer = MessageBuffer.Create(4);
             headerBuffer.Count = 4;
 
             args.SetBuffer(headerBuffer.Buffer, headerBuffer.Offset, 4);
@@ -521,13 +548,13 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         }
 
         /// <summary>
-        ///     Setup a listen operation for a new TCP body.
+        ///     Set up a listen operation for a new TCP body.
         /// </summary>
         /// <param name="args">The socket args to use during the operation.</param>
         /// <param name="length">The number of bytes in the body.</param>
         private void SetupReceiveBody(SocketAsyncEventArgs args, int length)
         {
-            MessageBuffer bodyBuffer = MessageBuffer.Create(length);
+            var bodyBuffer = MessageBuffer.Create(length);
             bodyBuffer.Count = length;
 
             args.SetBuffer(bodyBuffer.Buffer, bodyBuffer.Offset, length);
@@ -562,12 +589,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         private void TcpSendCompleted(object sender, SocketAsyncEventArgs e)
         {
             if (e.SocketError != SocketError.Success)
+            {
                 UnregisterAndDisconnect(e.SocketError);
-            
+            }
+
             e.Completed -= TcpSendCompleted;
 
-            MessageBuffer messageBuffer = (MessageBuffer)e.UserToken;
-            int bytesSent = messageBuffer.Count;
+            var messageBuffer = (MessageBuffer)e.UserToken;
+            var bytesSent = messageBuffer.Count;
 
             //Always dispose buffer when completed!
             messageBuffer.Dispose();
@@ -585,7 +614,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         private void UdpSendCompleted(int bytesSent, SocketError e)
         {
             if (e != SocketError.Success)
+            {
                 UnregisterAndDisconnect(e);
+            }
 
             bytesSentCounterUdp.Increment(bytesSent);
         }
@@ -606,19 +637,26 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 HandleDisconnection(error);
             }
         }
-        
+
         /// <inheritdoc/>
         public override IPEndPoint GetRemoteEndPoint(string name)
         {
             if (name.ToLower() == "tcp")
+            {
                 return RemoteTcpEndPoint;
+            }
             else if (name.ToLower() == "udp")
+            {
                 return RemoteUdpEndPoint;
+            }
             else
+            {
                 throw new ArgumentException("Endpoint name must either be TCP or UDP");
+            }
         }
 
-#region IDisposable Support
+        #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected override void Dispose(bool disposing)
@@ -628,7 +666,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 if (disposing)
                 {
                     if (IsListening || CanSend)
+                    {
                         Disconnect();
+                    }
 
                     tcpSocket.Close();
                 }
@@ -636,7 +676,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 disposedValue = true;
             }
         }
-        
-#endregion
+
+        #endregion
     }
 }

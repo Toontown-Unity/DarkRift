@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-
 namespace DarkRift.DataStructures
 {
     /// <summary>
@@ -24,7 +19,7 @@ namespace DarkRift.DataStructures
         /// <summary>
         ///     The samples recorded.
         /// </summary>
-        private float[] samples;
+        private readonly float[] samples;
 
         /// <summary>
         ///     The next sample to overwrite.
@@ -48,7 +43,7 @@ namespace DarkRift.DataStructures
         {
             lock (samples)
             {
-                sample = sample / samples.Length;
+                sample /= samples.Length;
 
                 Average = Average - samples[head] + sample;
 
@@ -65,8 +60,10 @@ namespace DarkRift.DataStructures
         {
             lock (samples)
             {
-                for (int i = 0; i < samples.Length; i++)
+                for (var i = 0; i < samples.Length; i++)
+                {
                     samples[i] = 0;
+                }
 
                 head = 0;
                 Average = 0;

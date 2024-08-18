@@ -5,9 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DarkRift
 {
@@ -54,7 +51,7 @@ namespace DarkRift
         ///     Indicates whether this message is a command message or not.
         /// </summary>
         /// <exception cref="AccessViolationException">If the message is readonly.</exception>
-        internal bool IsCommandMessage
+        public bool IsCommandMessage
         {
             get => (flags & COMMAND_FLAG_MASK) != 0;
 
@@ -67,9 +64,13 @@ namespace DarkRift
                 else
                 {
                     if (value)
+                    {
                         flags |= COMMAND_FLAG_MASK;
+                    }
                     else
-                        flags &= byte.MaxValue ^ COMMAND_FLAG_MASK;        //XOR over simple bitwise NOT to avoid entering negative values and ints!
+                    {
+                        flags &= byte.MaxValue ^ COMMAND_FLAG_MASK; //XOR over simple bitwise NOT to avoid entering negative values and ints!
+                    }
                 }
             }
         }
@@ -86,11 +87,11 @@ namespace DarkRift
                 if (value)
                 {
                     flags |= IS_PING_FLAG_MASK;
-                    flags &= byte.MaxValue ^ PING_TYPE_FLAG_MASK;       //XOR over simple bitwise NOT to avoid entering negative values and ints!
+                    flags &= byte.MaxValue ^ PING_TYPE_FLAG_MASK; //XOR over simple bitwise NOT to avoid entering negative values and ints!
                 }
                 else
                 {
-                    flags &= byte.MaxValue ^ IS_PING_FLAG_MASK ^ PING_TYPE_FLAG_MASK;       //XOR over simple bitwise NOT to avoid entering negative values and ints!
+                    flags &= byte.MaxValue ^ IS_PING_FLAG_MASK ^ PING_TYPE_FLAG_MASK; //XOR over simple bitwise NOT to avoid entering negative values and ints!
                 }
             }
         }
@@ -110,7 +111,7 @@ namespace DarkRift
                 }
                 else
                 {
-                    flags &= byte.MaxValue ^ IS_PING_FLAG_MASK ^ PING_TYPE_FLAG_MASK;       //XOR over simple bitwise NOT to avoid entering negative values and ints!
+                    flags &= byte.MaxValue ^ IS_PING_FLAG_MASK ^ PING_TYPE_FLAG_MASK; //XOR over simple bitwise NOT to avoid entering negative values and ints!
                 }
             }
         }
@@ -141,9 +142,13 @@ namespace DarkRift
             set
             {
                 if (IsReadOnly)
+                {
                     throw new AccessViolationException("Message is read-only. This property can only be set when IsReadOnly is false. You may want to create a writable instance of this Message using Message.Clone().");
+                }
                 else
+                {
                     tag = value;
+                }
             }
         }
 
@@ -152,7 +157,7 @@ namespace DarkRift
         /// <summary>
         ///     Code to identify pings and acknowledgements.
         /// </summary>
-        internal ushort PingCode { get; private set; }
+        public ushort PingCode { get; private set; }
 
         /// <summary>
         ///     Random number generator for each thread.
@@ -171,7 +176,7 @@ namespace DarkRift
         /// <param name="tag">The tag the message has.</param>
         public static Message CreateEmpty(ushort tag)
         {
-            Message message = ObjectCache.GetMessage();
+            var message = ObjectCache.GetMessage();
 
             message.isCurrentlyLoungingInAPool = false;
 
@@ -190,7 +195,7 @@ namespace DarkRift
         /// <param name="writer">The initial data in the message.</param>
         public static Message Create(ushort tag, DarkRiftWriter writer)
         {
-            Message message = ObjectCache.GetMessage();
+            var message = ObjectCache.GetMessage();
 
             message.isCurrentlyLoungingInAPool = false;
 
@@ -209,40 +214,13 @@ namespace DarkRift
         /// <param name="obj">The initial object in the message data.</param>
         public static Message Create<T>(ushort tag, T obj) where T : IDarkRiftSerializable
         {
-            Message message = ObjectCache.GetMessage();
+            var message = ObjectCache.GetMessage();
 
             message.isCurrentlyLoungingInAPool = false;
 
             message.IsReadOnly = false;
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
-            {
-                writer.Write(obj);
-
-                message.buffer = writer.ToBuffer();
-            }
-
-            message.tag = tag;
-            message.flags = 0;
-            message.PingCode = 0;
-            return message;
-        }
-
-        /// <summary>
-        ///     Creates a new message with the given tag and serializable object.
-        /// </summary>
-        /// <param name="tag">The tag the message has.</param>
-        /// <param name="obj">The initial object in the message data.</param>
-        [Obsolete("Use Create<T>(ushort tag, T serializable) instead.")]
-        public static Message Create(ushort tag, IDarkRiftSerializable obj)
-        {
-            Message message = ObjectCache.GetMessage();
-
-            message.isCurrentlyLoungingInAPool = false;
-
-            message.IsReadOnly = false;
-
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            using (var writer = DarkRiftWriter.Create())
             {
                 writer.Write(obj);
 
@@ -260,20 +238,20 @@ namespace DarkRift
         /// </summary>
         /// <param name="buffer">The buffer containing the message.</param>
         /// <param name="isReadOnly">Whether the message should be created read only or not.</param>
-        internal static Message Create(IMessageBuffer buffer, bool isReadOnly)
+        public static Message Create(IMessageBuffer buffer, bool isReadOnly)
         {
-            Message message = ObjectCache.GetMessage();
+            var message = ObjectCache.GetMessage();
 
             message.isCurrentlyLoungingInAPool = false;
 
             // We clone the message buffer so we can modify it's properties safely
             message.buffer = buffer.Clone();
-            
+
             //Get flags first so we can query it
             message.flags = buffer.Buffer[buffer.Offset];
 
             //Ping messages have an extra 2 byte header
-            int headerLength = message.IsPingMessage || message.IsPingAcknowledgementMessage ? 5 : 3;
+            var headerLength = message.IsPingMessage || message.IsPingAcknowledgementMessage ? 5 : 3;
             message.buffer.Offset = buffer.Offset + headerLength;
             message.buffer.Count = buffer.Count - headerLength;
 
@@ -289,7 +267,6 @@ namespace DarkRift
         /// </summary>
         internal Message()
         {
-            
         }
 
         /// <summary>
@@ -298,7 +275,9 @@ namespace DarkRift
         public void Empty()
         {
             if (IsReadOnly)
+            {
                 throw new AccessViolationException("Message is read-only. This property can only be set when IsReadOnly is false. You may want to create a writable instance of this Message using Message.Clone().");
+            }
 
             // To avoid corrupting the shared memory just get rid of the buffer and create a new one
             buffer.Dispose();
@@ -323,7 +302,9 @@ namespace DarkRift
         public void Serialize(DarkRiftWriter writer)
         {
             if (IsReadOnly)
+            {
                 throw new AccessViolationException("Message is read-only. This property can only be set when IsReadOnly is false. You may want to create a writable instance of this Message using Message.Clone().");
+            }
 
             buffer.Dispose();
             buffer = writer.ToBuffer();
@@ -336,8 +317,10 @@ namespace DarkRift
         /// <returns>The deserialized object.</returns>
         public T Deserialize<T>() where T : IDarkRiftSerializable, new()
         {
-            using (DarkRiftReader reader = GetReader())
+            using (var reader = GetReader())
+            {
                 return reader.ReadSerializable<T>();
+            }
         }
 
         /// <summary>
@@ -347,26 +330,9 @@ namespace DarkRift
         /// <param name="t">The object to deserialize the data into.</param>
         public void DeserializeInto<T>(ref T t) where T : IDarkRiftSerializable
         {
-            using (DarkRiftReader reader = GetReader())
-                reader.ReadSerializableInto<T>(ref t);
-        }
-
-        /// <summary>
-        ///     Serializes an object into the data of this message.
-        /// </summary>
-        /// <param name="obj">The object to serialize.</param>
-        /// <exception cref="AccessViolationException">If the message is readonly.</exception>
-        [Obsolete("Use Serialize<T>(T obj) instead.")]
-        public void Serialize(IDarkRiftSerializable obj)
-        {
-            if (IsReadOnly)
-                throw new AccessViolationException("Message is read-only. This property can only be set when IsReadOnly is false. You may want to create a writable instance of this Message using Message.Clone().");
-
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            using (var reader = GetReader())
             {
-                writer.Write(obj);
-
-                Serialize(writer);
+                reader.ReadSerializableInto<T>(ref t);
             }
         }
 
@@ -378,9 +344,11 @@ namespace DarkRift
         public void Serialize<T>(T obj) where T : IDarkRiftSerializable
         {
             if (IsReadOnly)
+            {
                 throw new AccessViolationException("Message is read-only. This property can only be set when IsReadOnly is false. You may want to create a writable instance of this Message using Message.Clone().");
+            }
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            using (var writer = DarkRiftWriter.Create())
             {
                 writer.Write(obj);
 
@@ -396,7 +364,10 @@ namespace DarkRift
             IsPingMessage = true;
 
             if (random == null)
+            {
                 random = new Random();
+            }
+
             PingCode = (ushort)random.Next();
         }
 
@@ -407,7 +378,9 @@ namespace DarkRift
         public void MakePingAcknowledgementMessage(Message acknowledging)
         {
             if (!acknowledging.IsPingMessage)
+            {
                 throw new ArgumentException("Message to acknowledge is not a ping message so cannot be used here. You can check if a message is a ping message using the Message.IsPingMessage property.");
+            }
 
             IsPingAcknowledgementMessage = true;
             PingCode = acknowledging.PingCode;
@@ -418,19 +391,21 @@ namespace DarkRift
         /// </summary>
         /// <returns>The buffer.</returns>
         //TODO DR3 Make this return an IMessageBuffer
-        internal MessageBuffer ToBuffer()
+        public MessageBuffer ToBuffer()
         {
-            int headerLength = IsPingMessage || IsPingAcknowledgementMessage ? 5 : 3;
-            int totalLength = headerLength + DataLength;
+            var headerLength = IsPingMessage || IsPingAcknowledgementMessage ? 5 : 3;
+            var totalLength = headerLength + DataLength;
 
-            MessageBuffer buffer = MessageBuffer.Create(totalLength);
+            var buffer = MessageBuffer.Create(totalLength);
             buffer.Count = totalLength;
 
             buffer.Buffer[buffer.Offset] = flags;
             BigEndianHelper.WriteBytes(buffer.Buffer, buffer.Offset + 1, tag);
 
             if (IsPingMessage || IsPingAcknowledgementMessage)
+            {
                 BigEndianHelper.WriteBytes(buffer.Buffer, buffer.Offset + 3, PingCode);
+            }
 
             //Due to poor design, here's un unavoidable memory copy! Hooray!
             Buffer.BlockCopy(this.buffer.Buffer, this.buffer.Offset, buffer.Buffer, buffer.Offset + headerLength, this.buffer.Count);
@@ -444,11 +419,11 @@ namespace DarkRift
         /// <returns>A new instance of the message.</returns>
         public Message Clone()
         {
-            Message message = ObjectCache.GetMessage();
+            var message = ObjectCache.GetMessage();
 
             //We don't want to give a reference to our buffer so we need to clone it
             message.buffer = buffer.Clone();
-            
+
             message.flags = flags;
             message.tag = tag;
             message.PingCode = PingCode;
@@ -478,7 +453,9 @@ namespace DarkRift
         ~Message()
         {
             if (!isCurrentlyLoungingInAPool)
+            {
                 ObjectCacheHelper.MessageWasFinalized();
+            }
         }
     }
 }

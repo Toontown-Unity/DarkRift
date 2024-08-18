@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -28,24 +26,6 @@ namespace DarkRift.Server
         ushort ID { get; }
 
         /// <summary>
-        ///     The remote end point we are connected to on TCP.
-        /// </summary>
-        [Obsolete("Use GetRemoteEndPoint(\"TCP\") instead.")]
-        IPEndPoint RemoteTcpEndPoint { get; }
-
-        /// <summary>
-        ///     The remote end point we are connected to UDP.
-        /// </summary>
-        [Obsolete("Use GetRemoteEndPoint(\"UDP\") instead.")]
-        IPEndPoint RemoteUdpEndPoint { get; }
-
-        /// <summary>
-        ///     Is this client still available?
-        /// </summary>
-        [Obsolete("Use IClient.ConnectionState instead.")]
-        bool IsConnected { get; }
-
-        /// <summary>
         ///     The state of the connection;
         /// </summary>
         ConnectionState ConnectionState { get; }
@@ -56,11 +36,7 @@ namespace DarkRift.Server
         /// <remarks>
         ///     <legacyBold>Setter only available in Pro.</legacyBold>
         /// </remarks>
-        byte Strikes
-        {
-            get;
-            set;
-        }
+        byte Strikes { get; set; }
 
         /// <summary>
         ///     The time this client connected to the server.
@@ -86,7 +62,7 @@ namespace DarkRift.Server
         ///     The collection of end points this client is connected to.
         /// </summary>
         IEnumerable<IPEndPoint> RemoteEndPoints { get; }
-        
+
         /// <summary>
         ///     The round trip time helper for this client.
         /// </summary>

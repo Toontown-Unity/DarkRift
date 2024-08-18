@@ -40,7 +40,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <summary>
         ///     Whether Nagle's algorithm should be disabled.
         /// </summary>
-        public override bool NoDelay {
+        public override bool NoDelay
+        {
             get => TcpListener.NoDelay;
             set => TcpListener.NoDelay = value;
         }
@@ -104,36 +105,46 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             // Only use the values from the settings element if not specified in the standardised way, for backwards compatibility
             // N.B. originally you could specify an ipVersion param but this has since been removed.
-            if (this.Address == null)
+            if (Address == null)
             {
-                this.Address = IPAddress.Parse(listenerLoadData.Settings["address"]);
-                this.Port = ushort.Parse(listenerLoadData.Settings["port"]);
+                Address = IPAddress.Parse(listenerLoadData.Settings["address"]);
+                Port = ushort.Parse(listenerLoadData.Settings["port"]);
             }
 
             if (listenerLoadData.Settings["udpPort"] != null)
-                this.UdpPort = ushort.Parse(listenerLoadData.Settings["udpPort"]);
+            {
+                UdpPort = ushort.Parse(listenerLoadData.Settings["udpPort"]);
+            }
             else
-                this.UdpPort = this.Port;
+            {
+                UdpPort = Port;
+            }
 
             if (listenerLoadData.Settings["protocolVersion"] != null)
-                this.BichannelProtocolVersion = int.Parse(listenerLoadData.Settings["protocolVersion"]);
+            {
+                BichannelProtocolVersion = int.Parse(listenerLoadData.Settings["protocolVersion"]);
+            }
 
             var preserveTcpOrdering = listenerLoadData.Settings["preserveTcpOrdering"]?.ToLower();
-            this.PreserveTcpOrdering = preserveTcpOrdering == null || preserveTcpOrdering == "true"; // keep this true by default, but if user specifies it in config they probably want to disable it
+            PreserveTcpOrdering = preserveTcpOrdering == null || preserveTcpOrdering == "true"; // keep this true by default, but if user specifies it in config they probably want to disable it
 
             TcpListener = new Socket(Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             UdpListener = new Socket(Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
 
             // TODO DR3 this should default to true
-            this.NoDelay = listenerLoadData.Settings["noDelay"]?.ToLower() == "true";
+            NoDelay = listenerLoadData.Settings["noDelay"]?.ToLower() == "true";
             this.NetworkListenerManager = (NetworkListenerManager)listenerLoadData.NetworkListenerManager;
 
             if (listenerLoadData.Settings["maxTcpBodyLength"] != null)
-                this.MaxTcpBodyLength = int.Parse(listenerLoadData.Settings["maxTcpBodyLength"]);
+            {
+                MaxTcpBodyLength = int.Parse(listenerLoadData.Settings["maxTcpBodyLength"]);
+            }
             else
-                this.MaxTcpBodyLength = 65535;
+            {
+                MaxTcpBodyLength = 65535;
+            }
 
-            // By default on Windows ICMP Port Unreachable messages cause the socket to close, we really don't want that
+            // By default, on Windows ICMP Port Unreachable messages cause the socket to close, we really don't want that
             // https://stackoverflow.com/a/74327430/2755790
 
             try
@@ -144,7 +155,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             {
                 // Not on Windows, no need to worry about the option
             }
-            catch(SocketException)
+            catch (SocketException)
             {
                 // Not on Windows, no need to worry about the option
             }
@@ -276,13 +287,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             lock (PendingTcpSockets)
             {
                 //Generate random authentication token
-                Random r = new Random();
+                var r = new Random();
                 do
+                {
                     token = ((long)r.Next() << 32) | (long)r.Next();
-                while (PendingTcpSockets.ContainsKey(token));
+                } while (PendingTcpSockets.ContainsKey(token));
 
                 //Create pending connection object
-                PendingConnection pendingConnection = new PendingConnection
+                var pendingConnection = new PendingConnection
                 {
                     TcpSocket = args.AcceptSocket,
                     Timer = CreateOneShotTimer(5000, delegate { ConnectionTimeoutHandler(token); })
@@ -296,7 +308,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             try
             {
                 //Send token via TCP
-                byte[] buffer = new byte[9]; //Version, Token * 8
+                var buffer = new byte[9]; //Version, Token * 8
                 buffer[0] = (byte)BichannelProtocolVersion;
                 BigEndianHelper.WriteBytes(buffer, 1, token);
                 args.AcceptSocket.Send(buffer);
@@ -304,7 +316,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             catch (SocketException e)
             {
                 //Failed to send auth token, cleanup
-                EndPoint remoteEndPoint = CancelPendingTcpConnection(token);
+                var remoteEndPoint = CancelPendingTcpConnection(token);
 
                 if (remoteEndPoint != null)
                     Logger.Error(
@@ -324,10 +336,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             lock (PendingTcpSockets)
             {
                 if (PendingTcpSockets.ContainsKey(token) == false)
+                {
                     return;
+                }
             }
 
-            EndPoint remoteEndPoint = CancelPendingTcpConnection(token);
+            var remoteEndPoint = CancelPendingTcpConnection(token);
 
 
             //Check found (should always be but will crash server otherwise)
@@ -352,7 +366,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             lock (PendingTcpSockets)
             {
-                PendingConnection connection = PendingTcpSockets[token];
+                var connection = PendingTcpSockets[token];
                 connection.Timer.Dispose();
 
                 EndPoint endPoint = null;
@@ -393,17 +407,19 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             //Check length
             if (buffer.Count != 9)
+            {
                 return;
+            }
 
             //Decode token
-            long token = BigEndianHelper.ReadInt64(buffer.Buffer, buffer.Offset + 1);
+            var token = BigEndianHelper.ReadInt64(buffer.Buffer, buffer.Offset + 1);
 
             //Lookup TCP socket
             Socket tcpSocket;
             lock (PendingTcpSockets)
             {
                 //Get connection
-                if (!PendingTcpSockets.TryGetValue(token, out PendingConnection pendingConnection))
+                if (!PendingTcpSockets.TryGetValue(token, out var pendingConnection))
                 {
                     tcpSocket = null;
                 }
@@ -422,7 +438,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 Logger.Trace("Accepted UDP connection from " + remoteEndPoint + ".");
 
                 //Create connection object
-                BichannelServerConnection connection = new BichannelServerConnection(
+                var connection = new BichannelServerConnection(
                     tcpSocket,
                     this,
                     (IPEndPoint)remoteEndPoint,
@@ -434,18 +450,23 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 // This MemoryBuffer is not supposed to be disposed here! It's disposed when the message is sent!
                 // HelloBuffer size is must be at least 12 bytes even when the actual token is shorter
                 // otherwise the message is dropped in some environments. namely ACI
-                int numBytesOfHello = BichannelProtocolVersion >= 1 ? 12 : 1; // This used to be 1 which caused issues with some ISPs.
-                MessageBuffer helloBuffer = MessageBuffer.Create(numBytesOfHello);
+                var numBytesOfHello = BichannelProtocolVersion >= 1 ? 12 : 1; // This used to be 1 which caused issues with some ISPs.
+                var helloBuffer = MessageBuffer.Create(numBytesOfHello);
                 helloBuffer.Count = numBytesOfHello;
 
                 if (BichannelProtocolVersion >= 1)
                 {
                     // Copy TCP token
-                    for (int i = 0; i < 8; i++)
+                    for (var i = 0; i < 8; i++)
+                    {
                         helloBuffer.Buffer[i] = buffer.Buffer[i + 1];
+                    }
+
                     // Zero remaining bytes (as we might want to use them somehow in the future)
-                    for (int i = 8; i < numBytesOfHello; ++i)
+                    for (var i = 8; i < numBytesOfHello; ++i)
+                    {
                         helloBuffer.Buffer[i] = 0;
+                    }
                 }
                 else
                 {
@@ -459,7 +480,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
             else
             {
-                Logger.Warning("UDP connection from " + remoteEndPoint + " had no associated TCP connection.");
+                Logger.Trace("UDP connection from " + remoteEndPoint + " had no associated TCP connection.");
                 return;
             }
         }
@@ -472,7 +493,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             //Register for UDP messages
             lock (UdpConnections)
+            {
                 UdpConnections.Add(connection.RemoteUdpEndPoint, connection);
+            }
         }
 
         /// <summary>
@@ -483,7 +506,9 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             //Register for UDP messages
             lock (UdpConnections)
+            {
                 UdpConnections.Remove(connection.RemoteUdpEndPoint);
+            }
         }
 
         /// <summary>
@@ -494,7 +519,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// <param name="completed">The function to invoke once the send is completed.</param>
         internal abstract bool SendUdpBuffer(EndPoint remoteEndPoint, MessageBuffer message, Action<int, SocketError> completed);
 
-#region IDisposable Support
+        #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected override void Dispose(bool disposing)
@@ -511,6 +537,6 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -6,11 +6,9 @@
 
 using DarkRift.Server.Metrics;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -44,7 +42,7 @@ namespace DarkRift.Server
         /// </summary>
         /// <param name="server">The server that owns this plugin manager.</param>
         /// <param name="logManager">The server's log manager.</param>
-        /// <param name="dataManager">The server's datamanager.</param>
+        /// <param name="dataManager">The server's data manager.</param>
         /// <param name="pluginFactory">The server's plugin factory.</param>
         /// <param name="metricsManager">The server's metrics manager.</param>
         internal NetworkListenerManager(DarkRiftServer server, LogManager logManager, MetricsManager metricsManager, DataManager dataManager, PluginFactory pluginFactory)
@@ -61,9 +59,9 @@ namespace DarkRift.Server
         /// <param name="settings">The settings to load plugins with.</param>
         internal void LoadNetworkListeners(ServerSpawnData.ListenersSettings settings)
         {
-            foreach (ServerSpawnData.ListenersSettings.NetworkListenerSettings s in settings.NetworkListeners)
+            foreach (var s in settings.NetworkListeners)
             {
-                NetworkListenerLoadData loadData = new NetworkListenerLoadData(
+                var loadData = new NetworkListenerLoadData(
                     s.Name,
                     s.Address,
                     s.Port,
@@ -86,7 +84,7 @@ namespace DarkRift.Server
         /// <param name="settings">The settings for this plugin.</param>
         internal NetworkListener LoadNetworkListener(Type type, string name, IPAddress address, ushort port, NameValueCollection settings)
         {
-            NetworkListenerLoadData loadData = new NetworkListenerLoadData(
+            var loadData = new NetworkListenerLoadData(
                 type.Name,
                 address,
                 port,
@@ -104,8 +102,10 @@ namespace DarkRift.Server
         /// </summary>
         internal void StartListening()
         {
-            foreach (NetworkListener listener in GetPlugins())
+            foreach (var listener in GetPlugins())
+            {
                 listener.StartListening();
+            }
         }
 
         /// <inheritdoc/>

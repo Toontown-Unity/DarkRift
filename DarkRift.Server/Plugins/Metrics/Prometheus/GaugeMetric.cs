@@ -5,7 +5,6 @@
  */
 
 using DarkRift.Server.Metrics;
-using System.Security.Cryptography;
 using System.Threading;
 
 namespace DarkRift.Server.Plugins.Metrics.Prometheus
@@ -38,9 +37,9 @@ namespace DarkRift.Server.Plugins.Metrics.Prometheus
 
         public GaugeMetric(string name, string description, string preformatted)
         {
-            this.Name = name;
-            this.Description = description;
-            this.Preformatted = preformatted;
+            Name = name;
+            Description = description;
+            Preformatted = preformatted;
         }
 
         /// <inheritDoc/>

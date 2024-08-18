@@ -4,14 +4,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using DarkRift.Dispatching;
 using System;
 using System.Threading;
 
 namespace DarkRift.Server
 {
     /// <summary>
-    ///     A timer for delaying execution or one-shot or repetative tasks.
+    ///     A timer for delaying execution or one-shot or repetitive tasks.
     /// </summary>
     public sealed class Timer : IDisposable
     {
@@ -28,12 +27,12 @@ namespace DarkRift.Server
         /// <summary>
         ///     The initial delay set on the timer.
         /// </summary>
-        public int IntialDelay { get; }
+        public int InitialDelay { get; }
 
         /// <summary>
         ///     The repetition period set on the timer.
         /// </summary>
-        public int RepetitionPeriod{ get; }
+        public int RepetitionPeriod { get; }
 
         /// <summary>
         ///     The backing timer.
@@ -54,9 +53,9 @@ namespace DarkRift.Server
         internal Timer(DarkRiftThreadHelper threadHelper, int delay, Action<Timer> callback)
         {
             this.threadHelper = threadHelper;
-            this.IsOneShot = true;
-            this.Callback = callback;
-            this.IntialDelay = delay;
+            IsOneShot = true;
+            Callback = callback;
+            InitialDelay = delay;
 
             timer = new System.Threading.Timer(InvokeCallback, null, delay, Timeout.Infinite);
         }
@@ -71,10 +70,10 @@ namespace DarkRift.Server
         internal Timer(DarkRiftThreadHelper threadHelper, int initialDelay, int repetitionPeriod, Action<Timer> callback)
         {
             this.threadHelper = threadHelper;
-            this.IsOneShot = false;
-            this.Callback = callback;
-            this.IntialDelay = initialDelay;
-            this.RepetitionPeriod = repetitionPeriod;
+            IsOneShot = false;
+            Callback = callback;
+            InitialDelay = initialDelay;
+            RepetitionPeriod = repetitionPeriod;
 
             timer = new System.Threading.Timer(InvokeCallback, null, initialDelay, repetitionPeriod);
         }
@@ -93,7 +92,8 @@ namespace DarkRift.Server
             threadHelper.DispatchIfNeeded(DoInvoke);
         }
 
-    #region IDisposable Support
+        #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         private void Dispose(bool disposing)
@@ -108,7 +108,7 @@ namespace DarkRift.Server
                 disposedValue = true;
             }
         }
-        
+
         /// <summary>
         ///     Disposes of the timer and cancels all future invocations.
         /// </summary>
@@ -116,6 +116,7 @@ namespace DarkRift.Server
         {
             Dispose(true);
         }
-    #endregion
+
+        #endregion
     }
 }

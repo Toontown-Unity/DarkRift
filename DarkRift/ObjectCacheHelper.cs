@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Threading;
 
 namespace DarkRift
@@ -75,7 +74,7 @@ namespace DarkRift
         private static int finalizedActionDispatcherTasks = 0;
 
         /// <summary>
-        ///     Indcates an <see cref="AutoRecyclingArray"/> did not get recycled properly.
+        ///     Indicates an <see cref="AutoRecyclingArray"/> did not get recycled properly.
         /// </summary>
         internal static void AutoRecyclingArrayWasFinalized()
         {
@@ -83,7 +82,7 @@ namespace DarkRift
         }
 
         /// <summary>
-        ///     Indcates an <see cref="DarkRiftReader"/> did not get recycled properly.
+        ///     Indicates an <see cref="DarkRiftReader"/> did not get recycled properly.
         /// </summary>
         internal static void DarkRiftReaderWasFinalized()
         {
@@ -91,28 +90,31 @@ namespace DarkRift
         }
 
         /// <summary>
-        ///     Indcates an <see cref="DarkRiftWriter"/> did not get recycled properly.
+        ///     Indicates an <see cref="DarkRiftWriter"/> did not get recycled properly.
         /// </summary>
         internal static void DarkRiftWriterWasFinalized()
         {
             Interlocked.Increment(ref finalizedDarkRiftWriters);
         }
+
         /// <summary>
-        ///     Indcates an <see cref="Message"/> did not get recycled properly.
+        ///     Indicates an <see cref="Message"/> did not get recycled properly.
         /// </summary>
         internal static void MessageWasFinalized()
         {
             Interlocked.Increment(ref finalizedMessages);
         }
+
         /// <summary>
-        ///     Indcates an <see cref="MessageBuffer"/> did not get recycled properly.
+        ///     Indicates an <see cref="MessageBuffer"/> did not get recycled properly.
         /// </summary>
         internal static void MessageBufferWasFinalized()
         {
             Interlocked.Increment(ref finalizedMessageBuffers);
         }
+
         /// <summary>
-        ///     Indcates an <see cref="Dispatching.ActionDispatcherTask"/> did not get recycled properly.
+        ///     Indicates an <see cref="Dispatching.ActionDispatcherTask"/> did not get recycled properly.
         /// </summary>
         internal static void ActionDispatcherTaskWasFinalized()
         {

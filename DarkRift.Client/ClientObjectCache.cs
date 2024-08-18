@@ -35,7 +35,7 @@ namespace DarkRift.Client
         /// <summary>
         ///     Sets up the ObjectCache with the given settings.
         /// </summary>
-        /// <returns>True if the object cache was set with the sepcified settings, false if it is already initialized.</returns>
+        /// <returns>True if the object cache was set with the specified settings, false if it is already initialized.</returns>
         public static bool Initialize(ClientObjectCacheSettings settings)
         {
             lock (settingsLock)
@@ -73,7 +73,9 @@ namespace DarkRift.Client
         public static MessageReceivedEventArgs GetMessageReceivedEventArgs()
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ClientObjectCacheTestHelper.MessageReceivedEventArgsWasRetrieved();
@@ -92,7 +94,9 @@ namespace DarkRift.Client
         public static void ReturnMessageReceivedEventArgs(MessageReceivedEventArgs writer)
         {
             if (!initialized)
+            {
                 ThreadInitialize();
+            }
 
 #if DEBUG
             ClientObjectCacheTestHelper.MessageReceivedEventArgsWasReturned();

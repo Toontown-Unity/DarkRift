@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -35,7 +34,6 @@ namespace DarkRift.Server.Plugins
         /// </summary>
         public EntityGroup()
         {
-
         }
 
         /// <summary>
@@ -44,8 +42,10 @@ namespace DarkRift.Server.Plugins
         /// <param name="group">The group to copy elements from</param>
         public EntityGroup(IEnumerable<T> group)
         {
-            foreach (T item in group)
+            foreach (var item in group)
+            {
                 Add(item);
+            }
         }
 
         /// <inheritdoc/>
@@ -62,7 +62,7 @@ namespace DarkRift.Server.Plugins
 
         /// <inheritdoc/>
         public virtual bool Contains(T item)
-        {    
+        {
             return backing.Contains(item);
         }
 
@@ -83,7 +83,7 @@ namespace DarkRift.Server.Plugins
         {
             return backing.Remove(item);
         }
-        
+
         /// <inheritdoc/>
         void ICollection<T>.Add(T item)
         {

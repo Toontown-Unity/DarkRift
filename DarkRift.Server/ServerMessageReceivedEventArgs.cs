@@ -51,7 +51,7 @@ namespace DarkRift.Server
         /// <param name="remoteServer">The server the message was received from.</param>
         public static ServerMessageReceivedEventArgs Create(Message message, SendMode sendMode, IRemoteServer remoteServer)
         {
-            ServerMessageReceivedEventArgs messageReceivedEventArgs = ServerObjectCache.GetServerMessageReceivedEventArgs();
+            var messageReceivedEventArgs = ServerObjectCache.GetServerMessageReceivedEventArgs();
 
             messageReceivedEventArgs.message = message;
             messageReceivedEventArgs.SendMode = sendMode;
@@ -68,13 +68,12 @@ namespace DarkRift.Server
         /// </summary>
         internal ServerMessageReceivedEventArgs()
         {
-
         }
 
         /// <summary>
         ///     Gets the message received.
         /// </summary>
-        /// <returns>An new instance of the message received.</returns>
+        /// <returns>A new instance of the message received.</returns>
         public Message GetMessage()
         {
             return message.Clone();
@@ -95,7 +94,9 @@ namespace DarkRift.Server
         ~ServerMessageReceivedEventArgs()
         {
             if (!isCurrentlyLoungingInAPool)
+            {
                 ServerObjectCacheHelper.ServerMessageReceivedEventArgsWasFinalized();
+            }
         }
     }
 }

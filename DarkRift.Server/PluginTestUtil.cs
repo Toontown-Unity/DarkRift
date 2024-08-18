@@ -4,11 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 
 namespace DarkRift.Server
 {
@@ -25,8 +21,8 @@ namespace DarkRift.Server
         /// <param name="plugin">The plugin to invoke the command on.</param>
         public void RunCommandOn(string command, ExtendedPluginBase plugin)
         {
-            string commandName = CommandEngine.GetCommandName(command).ToLower();
-            Command commandObj = plugin.Commands.Single((x) => x.Name.ToLower() == commandName);
+            var commandName = CommandEngine.GetCommandName(command).ToLower();
+            var commandObj = plugin.Commands.Single((x) => x.Name.ToLower() == commandName);
 
             commandObj.Handler.Invoke(this, CommandEngine.BuildCommandEventArgs(command, commandObj));
         }

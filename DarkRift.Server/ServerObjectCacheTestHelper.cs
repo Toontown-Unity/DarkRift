@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Threading;
 
 namespace DarkRift.Server
@@ -90,7 +89,8 @@ namespace DarkRift.Server
         /// <summary>
         ///     Resets all metrics recorded.
         /// </summary>
-        public static void ResetCounters() {
+        public static void ResetCounters()
+        {
             Interlocked.Exchange(ref retrievedMessageReceivedEventArgs, 0);
             Interlocked.Exchange(ref returnedMessageReceivedEventArgs, 0);
 

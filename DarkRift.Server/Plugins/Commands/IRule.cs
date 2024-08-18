@@ -4,11 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DarkRift.Server.Plugins.Commands
 {
@@ -61,7 +57,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public TagRule(ushort tag)
         {
-            this.Tag = tag;
+            Tag = tag;
         }
 
         public bool Accepts(Message message, Client client)
@@ -71,7 +67,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public override string ToString()
         {
-            return $"Tag={this.Tag}";
+            return $"Tag={Tag}";
         }
 
         public override bool Equals(object obj)
@@ -88,7 +84,7 @@ namespace DarkRift.Server.Plugins.Commands
                 return false;
             }
 
-            TagRule r = (TagRule)obj;
+            var r = (TagRule)obj;
 
             // Return true if the fields match
             return Tag == r.Tag;
@@ -106,7 +102,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public IDRule(uint id)
         {
-            this.ID = id;
+            ID = id;
         }
 
         public bool Accepts(Message message, Client client)
@@ -116,7 +112,7 @@ namespace DarkRift.Server.Plugins.Commands
 
         public override string ToString()
         {
-            return $"ID={this.ID}";
+            return $"ID={ID}";
         }
 
         public override bool Equals(object obj)
@@ -133,7 +129,7 @@ namespace DarkRift.Server.Plugins.Commands
                 return false;
             }
 
-            IDRule r = (IDRule)obj;
+            var r = (IDRule)obj;
 
             // Return true if the fields match
             return ID == r.ID;
@@ -151,17 +147,17 @@ namespace DarkRift.Server.Plugins.Commands
 
         public IPRule(IPAddress ip)
         {
-            this.IP = ip;
+            IP = ip;
         }
 
         public bool Accepts(Message message, Client client)
         {
-            return client.RemoteTcpEndPoint.Address.Equals(IP) || client.RemoteUdpEndPoint.Address.Equals(IP);     //TCP and UDP addresses should be the same at the moment but you never know
+            return client.RemoteTcpEndPoint.Address.Equals(IP) || client.RemoteUdpEndPoint.Address.Equals(IP); //TCP and UDP addresses should be the same at the moment but you never know
         }
 
         public override string ToString()
         {
-            return $"IP={this.IP}";
+            return $"IP={IP}";
         }
 
         public override bool Equals(object obj)
@@ -178,7 +174,7 @@ namespace DarkRift.Server.Plugins.Commands
                 return false;
             }
 
-            IPRule r = (IPRule)obj;
+            var r = (IPRule)obj;
 
             // Return true if the fields match
             return IP.Equals(r.IP);
