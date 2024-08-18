@@ -189,6 +189,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             Logger.Trace("Accepted TCP connection from " + acceptSocket.RemoteEndPoint + ".");
             acceptSocket.NoDelay = NoDelay;
             SocketAsyncEventArgs tcpArgs = ObjectCache.GetSocketAsyncEventArgs();
+            tcpArgs.BufferList = null;
             MessageBuffer headerBuffer = MessageBuffer.Create(4);
             headerBuffer.Count = 4;
 
