@@ -94,6 +94,11 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         /// </summary>
         private readonly ICounterMetric connectionAttemptTimeoutsCounter;
 
+        /// <summary>
+        /// Ref to our network Listener Manager
+        /// </summary>
+        private NetworkListenerManager NetworkListenerManager;
+
         public BichannelListenerBase(NetworkListenerLoadData listenerLoadData)
             : base(listenerLoadData)
         {
@@ -121,6 +126,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
 
             // TODO DR3 this should default to true
             this.NoDelay = listenerLoadData.Settings["noDelay"]?.ToLower() == "true";
+            this.NetworkListenerManager = (NetworkListenerManager)listenerLoadData.NetworkListenerManager;
 
             if (listenerLoadData.Settings["maxTcpBodyLength"] != null)
                 this.MaxTcpBodyLength = int.Parse(listenerLoadData.Settings["maxTcpBodyLength"]);
@@ -170,6 +176,101 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         protected void HandleTcpConnection(Socket acceptSocket)
         {
             Logger.Trace("Accepted TCP connection from " + acceptSocket.RemoteEndPoint + ".");
+            acceptSocket.NoDelay = NoDelay;
+            SocketAsyncEventArgs tcpArgs = ObjectCache.GetSocketAsyncEventArgs();
+            // TODO: Set buffer count
+            MessageBuffer headerBuffer = MessageBuffer.Create(4);
+            headerBuffer.Count = 4;
+
+            tcpArgs.SetBuffer(headerBuffer.Buffer, headerBuffer.Offset, 4);
+            tcpArgs.UserToken = headerBuffer;
+            tcpArgs.AcceptSocket = acceptSocket;
+
+            tcpArgs.Completed += HandleHelloHeader;
+            bool isAsync = acceptSocket.ReceiveAsync(tcpArgs);
+            if(!isAsync){
+                HandleHelloHeader(this, tcpArgs);
+            }
+        }
+
+        private void HandleHelloHeader(object sender, SocketAsyncEventArgs args)
+        {
+            Logger.Info("Handling Hello Header");
+            args.Completed -= HandleHelloHeader;
+            if (args.SocketError != SocketError.Success || args.BytesTransferred == 0)
+            {
+                Logger.Warning("Socket disconnected during hello Header.");
+                args.AcceptSocket.Close();
+                args.Dispose();
+                return;
+            }
+
+            MessageBuffer headerBuffer = (MessageBuffer)args.UserToken;
+
+            int bodyLength = BigEndianHelper.ReadInt32(headerBuffer.Buffer, 0);
+            headerBuffer.Dispose();
+
+
+            if (bodyLength >= MaxTcpBodyLength)
+            {
+                Logger.Warning("Recieved Hello Header was longer than acceptable limits");
+                args.AcceptSocket.Close();
+                headerBuffer.Dispose();
+                args.Dispose();
+                return;
+            }
+            MessageBuffer bodyBuffer = MessageBuffer.Create(bodyLength);
+            bodyBuffer.Count = bodyLength;
+
+            args.SetBuffer(bodyBuffer.Buffer, bodyBuffer.Offset, bodyLength);
+            args.UserToken = bodyBuffer;
+            args.Completed += HandleHelloResp;
+            bool isAsync = args.AcceptSocket.ReceiveAsync(args);
+            if(!isAsync){
+                HandleHelloResp(this, args);
+            }
+        }
+
+        private void HandleHelloResp(object sender, SocketAsyncEventArgs args)
+        {
+            args.Completed -= HandleHelloResp;
+            if (args.SocketError != SocketError.Success || args.BytesTransferred == 0)
+            {
+                Logger.Warning("Socket disconnected during hello Header.");
+                MessageBuffer buffer = (MessageBuffer)args.UserToken;
+                buffer.Dispose();
+                args.AcceptSocket.Close();
+                args.Dispose();
+                return;
+            }
+
+            Message message;
+            try
+            {
+                message = Message.Create((MessageBuffer)args.UserToken, true);
+                try
+                {
+                    if (NetworkListenerManager.HelloAction != null && !NetworkListenerManager.HelloAction(message))
+                    {
+                        Logger.Warning("Client failed to pass hello check.");
+                        args.AcceptSocket.Close();
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Failed to read client packet", ex);
+                }
+                finally
+                {
+                    message.Dispose();
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Logger.Warning("The message received was not long enough to contain the header.");
+            }
+
 
             long token;
             lock (PendingTcpSockets)
@@ -183,18 +284,14 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 //Create pending connection object
                 PendingConnection pendingConnection = new PendingConnection
                 {
-                    TcpSocket = acceptSocket,
-                    Timer = CreateOneShotTimer(5000, delegate
-                    {
-                        ConnectionTimeoutHandler(token);
-                    })
+                    TcpSocket = args.AcceptSocket,
+                    Timer = CreateOneShotTimer(5000, delegate { ConnectionTimeoutHandler(token); })
                 };
 
                 //Store token
                 PendingTcpSockets[token] = pendingConnection;
             }
 
-            acceptSocket.NoDelay = NoDelay;
 
             try
             {
@@ -202,7 +299,7 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 byte[] buffer = new byte[9]; //Version, Token * 8
                 buffer[0] = (byte)BichannelProtocolVersion;
                 BigEndianHelper.WriteBytes(buffer, 1, token);
-                acceptSocket.Send(buffer);
+                args.AcceptSocket.Send(buffer);
             }
             catch (SocketException e)
             {
@@ -210,8 +307,12 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 EndPoint remoteEndPoint = CancelPendingTcpConnection(token);
 
                 if (remoteEndPoint != null)
-                    Logger.Error("A SocketException occurred whilst sending the auth token to " + remoteEndPoint + ". It is likely the client disconnected before the server was able to perform the operation.", e);
+                    Logger.Error(
+                        "A SocketException occurred whilst sending the auth token to " + remoteEndPoint +
+                        ". It is likely the client disconnected before the server was able to perform the operation.",
+                        e);
             }
+            args.Dispose();
         }
 
         /// <summary>

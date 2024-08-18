@@ -82,6 +82,11 @@ namespace DarkRift.Client
         public static ObjectCacheSettings DefaultCacheSettings => DefaultClientCacheSettings;
 
         /// <summary>
+        ///     The Function used to get our Hello Packet
+        /// </summary>
+        public Func<Message> ClientHelloPacket;
+
+        /// <summary>
         ///     The recommended cache settings for clients.
         /// </summary>
         //TODO DR3 rename back to DefaultCacheSettings
@@ -172,8 +177,13 @@ namespace DarkRift.Client
                 };
                 ClientObjectCache.Initialize(clientObjectCacheSettings);
             }
-            
+
             this.RoundTripTime = new RoundTripTimeHelper(10, 10);
+        }
+
+        public void SetHelloPacket(Func<Message> action)
+        {
+            ClientHelloPacket = action;
         }
 
         /// <summary>
@@ -236,6 +246,7 @@ namespace DarkRift.Client
                 this.Connection.Dispose();
 
             this.Connection = connection;
+            connection.ClientHelloPacket = ClientHelloPacket;
             connection.MessageReceived = MessageReceivedHandler;
             connection.Disconnected = DisconnectedHandler;
 
@@ -435,7 +446,7 @@ namespace DarkRift.Client
         }
 
         private volatile bool disposed = false;
-        
+
         /// <summary>
         ///     Disposes of the DarkRift client object.
         /// </summary>

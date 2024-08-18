@@ -128,6 +128,33 @@ namespace DarkRift.Client
                 try
                 {
                     tcpSocket.Connect(RemoteTcpEndPoint);
+                    if (ClientHelloPacket != null)
+                    {
+                        // Send client Hello Message
+                        MessageBuffer message = ClientHelloPacket.Invoke().ToBuffer();
+                        byte[] header = new byte[4];
+                        BigEndianHelper.WriteBytes(header, 0, message.Count);
+
+                        SocketAsyncEventArgs args = ObjectCache.GetSocketAsyncEventArgs();
+
+                        args.SetBuffer(null, 0, 0);
+                        args.BufferList = new List<ArraySegment<byte>>()
+                        {
+                            new ArraySegment<byte>(header),
+                            new ArraySegment<byte>(message.Buffer, message.Offset, message.Count)
+                        };
+                        args.UserToken = message;
+                        try
+                        {
+                            tcpSocket.SendAsync(args);
+                        }
+                        catch (Exception)
+                        {
+                            message.Dispose();
+                            args.Completed -= TcpSendCompleted;
+                            ObjectCache.ReturnSocketAsyncEventArgs(args);
+                        }
+                    }
                 }
                 catch (SocketException e)
                 {
@@ -706,7 +733,7 @@ namespace DarkRift.Client
                     }
                 }
 
-                //Ignore ConnectionReset (ICMP Port Unreachable) since NATs will return that when they get 
+                //Ignore ConnectionReset (ICMP Port Unreachable) since NATs will return that when they get
                 //the punchthrough packets and they've not already been opened
                 else if (e.SocketError == SocketError.ConnectionReset)
                 {

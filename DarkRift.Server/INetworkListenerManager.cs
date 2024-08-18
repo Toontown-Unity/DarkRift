@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+using System;
+
 namespace DarkRift.Server
 {
     /// <summary>
@@ -18,8 +20,8 @@ namespace DarkRift.Server
         /// <returns>The listener.</returns>
         /// <remarks>
         ///     O(1) complexity.
-        ///     This cannot be called during server initialization as not all plugins may 
-        ///     have been loaded at that point, consider using the 
+        ///     This cannot be called during server initialization as not all plugins may
+        ///     have been loaded at that point, consider using the
         ///     <see cref="ExtendedPluginBase.Loaded(LoadedEventArgs)"/> event instead.
         /// </remarks>
         NetworkListener this[string name] { get; }
@@ -55,5 +57,10 @@ namespace DarkRift.Server
         ///     O(n) complexity.
         /// </remarks>
         T[] GetNetworkListenersByType<T>() where T : NetworkListener;
+
+        /// <summary>
+        ///     Action fired when the client sends its first TCP Packet
+        /// </summary>
+        Func<Message, bool> HelloAction { get; set; }
     }
 }

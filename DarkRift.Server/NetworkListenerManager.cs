@@ -35,6 +35,11 @@ namespace DarkRift.Server
         private readonly MetricsManager metricsManager;
 
         /// <summary>
+        ///     Action fired when the client sends its first TCP Packet
+        /// </summary>
+        public Func<Message, bool> HelloAction { get; set; }
+
+        /// <summary>
         ///     Creates a new NetworkListenerManager.
         /// </summary>
         /// <param name="server">The server that owns this plugin manager.</param>
@@ -83,7 +88,7 @@ namespace DarkRift.Server
         {
             NetworkListenerLoadData loadData = new NetworkListenerLoadData(
                 type.Name,
-                address, 
+                address,
                 port,
                 server,
                 settings,

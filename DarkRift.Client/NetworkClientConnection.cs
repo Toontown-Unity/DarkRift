@@ -53,11 +53,16 @@ namespace DarkRift.Client
         public abstract IEnumerable<IPEndPoint> RemoteEndPoints { get; }
 
         /// <summary>
+        ///     The Function used to get our Hello Packet
+        /// </summary>
+        public Func<Message> ClientHelloPacket;
+
+        /// <summary>
         ///     Creates a new client connection.
         /// </summary>
         public NetworkClientConnection()
         {
-            
+
         }
 
         /// <summary>
@@ -72,7 +77,7 @@ namespace DarkRift.Client
         /// <param name="sendMode">How the message should be sent.</param>
         /// <returns>Whether the send was successful.</returns>
         /// <remarks>
-        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
+        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
         ///     Not doing this will result in memnory leaks.
         /// </remarks>
@@ -90,7 +95,7 @@ namespace DarkRift.Client
         /// <param name="message">The message to be sent.</param>
         /// <returns>Whether the send was successful.</returns>
         /// <remarks>
-        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
+        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
         ///     Not doing this will result in memnory leaks.
         /// </remarks>
@@ -102,7 +107,7 @@ namespace DarkRift.Client
         /// <param name="message">The message to be sent.</param>
         /// <returns>Whether the send was successful.</returns>
         /// <remarks>
-        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done 
+        ///     <see cref="MessageBuffer"/> is an IDisposable type and therefore once you are done
         ///     using it you should call <see cref="MessageBuffer.Dispose"/> to release resources.
         ///     Not doing this will result in memnory leaks.
         /// </remarks>
@@ -122,7 +127,7 @@ namespace DarkRift.Client
         public abstract IPEndPoint GetRemoteEndPoint(string name);
 
         /// <summary>
-        ///     Handles a buffer being received. 
+        ///     Handles a buffer being received.
         /// </summary>
         /// <param name="message">The message received.</param>
         /// <param name="mode">The <see cref="SendMode"/> used to send the data.</param>
@@ -132,7 +137,7 @@ namespace DarkRift.Client
         }
 
         /*
-         * To ensure compatibility with older SocketError Disconnected event parameters we 
+         * To ensure compatibility with older SocketError Disconnected event parameters we
          * need to provide SocketErrors where possible which can make this a pain in the neck.
          */
 

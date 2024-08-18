@@ -423,6 +423,14 @@ namespace DarkRift.Server
         }
 
         /// <summary>
+        ///     Sets the Action called by the server when a client sends its first TCP packet.
+        /// </summary>
+        public void SetClientHelloAction(Func<Message, bool> action)
+        {
+            NetworkListenerManager.HelloAction = action;
+        }
+
+        /// <summary>
         ///     Executes a given command on the server.
         /// </summary>
         /// <param name="command">The command to execute.</param>
