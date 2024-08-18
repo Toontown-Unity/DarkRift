@@ -189,7 +189,6 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             Logger.Trace("Accepted TCP connection from " + acceptSocket.RemoteEndPoint + ".");
             acceptSocket.NoDelay = NoDelay;
             SocketAsyncEventArgs tcpArgs = ObjectCache.GetSocketAsyncEventArgs();
-            // TODO: Set buffer count
             MessageBuffer headerBuffer = MessageBuffer.Create(4);
             headerBuffer.Count = 4;
 
@@ -208,17 +207,19 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
         {
             Logger.Info("Handling Hello Header");
             args.Completed -= HandleHelloHeader;
+            var headerBuffer = (MessageBuffer)args.UserToken;
             if (args.SocketError != SocketError.Success || args.BytesTransferred == 0)
             {
                 Logger.Warning("Socket disconnected during hello Header.");
                 args.AcceptSocket.Close();
-                args.Dispose();
+                headerBuffer.Dispose();
+                args.UserToken = null;
+                ObjectCache.ReturnSocketAsyncEventArgs(args);
                 return;
             }
 
-            MessageBuffer headerBuffer = (MessageBuffer)args.UserToken;
 
-            int bodyLength = BigEndianHelper.ReadInt32(headerBuffer.Buffer, 0);
+            var bodyLength = BigEndianHelper.ReadInt32(headerBuffer.Buffer, 0);
             headerBuffer.Dispose();
 
 
@@ -227,10 +228,11 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 Logger.Warning("Recieved Hello Header was longer than acceptable limits");
                 args.AcceptSocket.Close();
                 headerBuffer.Dispose();
-                args.Dispose();
+                args.UserToken = null;
+                ObjectCache.ReturnSocketAsyncEventArgs(args);
                 return;
             }
-            MessageBuffer bodyBuffer = MessageBuffer.Create(bodyLength);
+            var bodyBuffer = MessageBuffer.Create(bodyLength);
             bodyBuffer.Count = bodyLength;
 
             args.SetBuffer(bodyBuffer.Buffer, bodyBuffer.Offset, bodyLength);
@@ -248,10 +250,10 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
             if (args.SocketError != SocketError.Success || args.BytesTransferred == 0)
             {
                 Logger.Warning("Socket disconnected during hello Header.");
-                MessageBuffer buffer = (MessageBuffer)args.UserToken;
+                var buffer = (MessageBuffer)args.UserToken;
                 buffer.Dispose();
                 args.AcceptSocket.Close();
-                args.Dispose();
+                ObjectCache.ReturnSocketAsyncEventArgs(args);
                 return;
             }
 
@@ -265,6 +267,10 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                     {
                         Logger.Warning("Client failed to pass hello check.");
                         args.AcceptSocket.Close();
+                        var buffer = (MessageBuffer)args.UserToken;
+                        buffer.Dispose();
+                        args.UserToken = null;
+                        ObjectCache.ReturnSocketAsyncEventArgs(args);
                         return;
                     }
                 }
@@ -282,6 +288,8 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                 Logger.Warning("The message received was not long enough to contain the header.");
             }
 
+            args.UserToken = null;
+            ObjectCache.ReturnSocketAsyncEventArgs(args);
 
             long token;
             lock (PendingTcpSockets)
@@ -324,7 +332,6 @@ namespace DarkRift.Server.Plugins.Listeners.Bichannel
                         ". It is likely the client disconnected before the server was able to perform the operation.",
                         e);
             }
-            args.Dispose();
         }
 
         /// <summary>

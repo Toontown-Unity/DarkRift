@@ -338,6 +338,7 @@ namespace DarkRift
 
             if (!socketAsyncEventArgsPool.ReturnInstance(socketAsyncEventArgs))
             {
+                socketAsyncEventArgs.BufferList = null;
                 socketAsyncEventArgs.Dispose();
             }
         }
